@@ -1,0 +1,31 @@
+1. npx create-react-app vidly
+2.  bootstrap
+3.  font-awesome
+4.  npm install lodash@4.17.10
+
+// for type checking in javascript applications
+// see more on type checking from https://reactjs/org/docs/typechecking-with-proptypes.html
+5. npm install prop-types@15.6.2  
+
+6. npm i react-router-dom@4.3.1
+
+// use npm-joi library for form validation
+7. npm i joi-browser@13.4
+
+8. npm i axios@0.18
+
+9. npm i query-string@6.1.0
+
+10. npm i react-toastify@4.1
+
+// use sentry.io for logging ur applications errors
+11. npm i raven-js@3.26.4
+
+12. npm i jwt-decode@2.2.0
+
+13. use npm run build 
+// to get an optimized production build
+
+
+FOR BACKEND
+//...

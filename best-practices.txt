@@ -1,0 +1,12 @@
+* always minimize use of refs
+
+headers which start with x-
+like x-auth-token are custom tokens
+
+jwt consists of header-payload and verify signature
+
+// puts x-auth-token in the header of every http request
+
+axios.defaults.headers.common['x-auth-token'] = auth.getJwt();
+
+always get rid of bidirectional dependencies
