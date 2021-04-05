@@ -62,13 +62,13 @@ const GroupCard = ({ groups, user, onDelete }) => {
                   {group.admin}
                 </Card.Subtitle>
               </Link>
-              <Card.Text>
+              {/* <Card.Text>
                 {group.description.substr(
                   0,
                   Math.min(group.description.length, 140)
                 )}
                 {group.description.length >= 140 && " ...."}
-              </Card.Text>
+              </Card.Text> */}
             </Card.Body>
             <Card.Footer>
               <small className="text-muted">

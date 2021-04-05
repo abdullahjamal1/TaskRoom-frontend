@@ -3,7 +3,7 @@ import Form from "./common/form";
 import Joi from "joi-browser";
 import auth from "../services/authService";
 import * as userService from "../services/userService";
-import Alert from 'react-bootstrap/Alert';
+import Alert from "react-bootstrap/Alert";
 
 class RegisterForm extends Form {
   state = {
@@ -19,16 +19,17 @@ class RegisterForm extends Form {
     email: Joi.string().required().label("Email").email(),
   };
 
-  renderResponse = () =>{
-    if(!this.state.responseMessage)
-      return <></>;
+  renderResponse = () => {
+    if (!this.state.responseMessage) return <></>;
     return <Alert variant={"success"}>{this.state.responseMessage}</Alert>;
-  }
+  };
 
   doSubmit = async () => {
     try {
-      const {data: responseMessage} = await userService.register(this.state.data);
-      this.setState({responseMessage})
+      const { data: responseMessage } = await userService.register(
+        this.state.data
+      );
+      this.setState({ responseMessage });
       // auth.loginWithJwt(response.headers["Authorization"]);
       // window.location = "/";
     } catch (ex) {
@@ -70,7 +71,12 @@ class RegisterForm extends Form {
   render() {
     return (
       <div className="row">
-        <div className="col-sm col-xs-0"></div>
+        <div className="col-8">
+          <img
+            src="https://github.com/aj941ga/TaskRoom-backend/raw/master/group.png"
+            className="img-fluid"
+          ></img>
+        </div>
         <form className="col" onSubmit={this.handleSubmit}>
           <h1>Register</h1>
           {this.renderInput("email", "Email")}
@@ -81,16 +87,14 @@ class RegisterForm extends Form {
             this.handleOnUsernameChange
           )}
           {this.state.usernameFeedback.message && (
-
             <div className={this.renderFeedbackClass()}>
-                          this.state.usernameFeedback.message
-                        </div>
+              this.state.usernameFeedback.message
+            </div>
           )}
           {this.renderInput("password", "Password", "password")}
           {this.renderResponse()}
           {this.renderButton("Register")}
         </form>
-        <div className="col-sm col-xs-0"></div>
       </div>
     );
   }
