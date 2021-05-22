@@ -19,6 +19,8 @@ import Users from './components/users';
 import ResetPassword from './components/resetPassword';
 import ResetPasswordChange from './components/resetPasswordChange';
 import Footer from './components/footer';
+import Task from './components/task';
+import SidebarMenu from './components/common/sidebar';
 
 class App extends Component {
   state = {
@@ -62,6 +64,7 @@ class App extends Component {
               path="/groupForm/:id"
               component={GroupForm}
             />
+            <ProtectedRoute path="/groups/tasks/:id" component={Task} />
             <ProtectedRoute path="/groups/:id" component={GroupView} />
             <ProtectedRoute path="/users/:username" component={Profile} />
             <ProtectedRoute path="/users" component={Users} />

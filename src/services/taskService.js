@@ -11,6 +11,11 @@ export function getTasks(groupId) {
     return http.get(apiEndPoint, { params: { groupId }, headers: { Authorization: getJwt() } });
 }
 
+export function getTask(taskId) {
+    return http.get(taskUrl(taskId), { params: { taskId }, headers: { Authorization: getJwt() } });
+}
+
+
 export function postTask({ title, description, dueTime, completed, groupId, taskId = null }) {
 
     if (taskId !== null) {

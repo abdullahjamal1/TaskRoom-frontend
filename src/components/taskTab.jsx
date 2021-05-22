@@ -1,8 +1,8 @@
 import { React, useState } from "react";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Badge } from "react-bootstrap";
 import Tasks from "./tasks";
 
-const TaskTab = ({ ...rest }) => {
+const TaskTab = ({ taskCounter, ...rest }) => {
   const [key, setKey] = useState("All");
 
   return (
@@ -12,18 +12,19 @@ const TaskTab = ({ ...rest }) => {
       onSelect={(k) => setKey(k)}
       className="mt-2"
     >
-      <Tab eventKey="All" title="All Tasks">
-        <Tasks {...rest} status="All" />
-      </Tab>
-      <Tab eventKey="missing" title="Missing">
-        <Tasks {...rest} status="missing" />
-      </Tab>
-      <Tab eventKey="todo" title="ToDo">
-        <Tasks {...rest} status="todo" />
-      </Tab>
-      <Tab eventKey="completed" title="completed">
-        <Tasks {...rest} status="completed" />
-      </Tab>
+      {taskCounter &&
+        taskCounter.map((task) => (
+          <Tab
+            eventKey={task.title}
+            title={
+              <div>
+                {task.title} <Badge variant={task.theme}>{task.number}</Badge>
+              </div>
+            }
+          >
+            <Tasks {...rest} status={task.title} />
+          </Tab>
+        ))}
     </Tabs>
   );
 };

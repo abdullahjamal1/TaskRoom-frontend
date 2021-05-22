@@ -8,15 +8,14 @@ const CommentContainer = ({ taskId, theme }) => {
 
   return (
     <>
-      <Button
+      <a
         onClick={() => setOpen(!open)}
         aria-controls="example-collapse-text"
         aria-expanded={open}
-        className="btn btn-sm mb-2"
-        variant={theme.toLowerCase()}
+        className={`text-${theme.toLowerCase()} mb-2`}
       >
-        Comments
-      </Button>
+        <i class="fa fa-comments" aria-hidden="true"></i> Comments
+      </a>
       <Collapse in={open}>
         <div id="example-collapse-text">
           <Comments taskId={taskId} parentId={-1} theme={theme} />

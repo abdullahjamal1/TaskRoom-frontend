@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Col, Row, Alert } from "react-bootstrap";
+import { Card, Spinner, ProgressBar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import GroupHeader from "./groupHeader";
 import Tasks from "./tasks";
@@ -8,19 +8,25 @@ import LoginContext from "../contexts/loginContext";
 import { getGroup } from "../services/groupService";
 import TaskForm from "./taskForm";
 import TaskTab from "./taskTab";
+import SidebarMenu from "./common/sidebar";
+import Members from "./members";
+import LoadingScreen from './loadingScreen';
 
 class GroupView extends Component {
   state = {
     taskCounter: [
-      { title: "Missed", number: 0, theme: "danger" },
-      { title: "ToDo", number: 0, theme: "warning" },
-      { title: "Completed", number: 0, theme: "success" },
+      { title: "All Tasks", number: 0, theme: "dark", percent: 0.0 },
+      { title: "Missing", number: 0, theme: "danger", percent: 0.0 },
+      { title: "ToDo", number: 0, theme: "warning", percent: 0.0 },
+      { title: "Completed", number: 0, theme: "success", percent: 0.0 },
     ],
     tasks: [],
     group: "",
+    isLoading: true,
   };
 
   async componentDidMount() {
+    this.setState({ isLoading: false });
     const groupId = this.props.match.params.id;
     const { data: group } = await getGroup(groupId);
     this.setState({ group });
@@ -44,9 +50,17 @@ class GroupView extends Component {
       else toDo++;
     }
     const taskCounter = [...this.state.taskCounter];
-    taskCounter[0].number = due;
-    taskCounter[1].number = toDo;
-    taskCounter[2].number = completed;
+
+    const total = due + toDo + completed;
+    taskCounter[0].number = total;
+    taskCounter[1].number = due;
+    taskCounter[2].number = toDo;
+    taskCounter[3].number = completed;
+
+    taskCounter[0].percent = (100 * total) / total;
+    taskCounter[1].percent = (100 * due) / total;
+    taskCounter[2].percent = (100 * toDo) / total;
+    taskCounter[3].percent = (100 * completed) / total;
     this.setState({ taskCounter });
   };
 
@@ -84,55 +98,64 @@ class GroupView extends Component {
   render() {
     const { user } = this.context;
     const { taskCounter, tasks, group } = this.state;
-    if (!group) return <div></div>;
+    
+    if (this.state.isLoading || !group){
+      return <LoadingScreen />;
+    }
 
     return (
       <>
         <div className="row mt-4 mb-4">
           <div className="col-12">
+            {/* <Members members={group.members} admins={group.admins} theme={group.theme}/> */}
             <GroupHeader user={user} group={group} />
           </div>
         </div>
         <div className="row">
-          <div className="col-9">
+          <div className="stickyCustom col-sm-3 m-1 col-0">
+            <Card >
+              <ProgressBar className="m-2">
+                {taskCounter.map(
+                  (t) =>
+                    t.title !== "All Tasks" && (
+                      <ProgressBar
+                        animated
+                        label={t.title}
+                        variant={t.theme}
+                        now={t.percent}
+                        key={t.title}
+                      />
+                    )
+                )}
+              </ProgressBar>
+              <Card.Body>
+                <small>
+                  <Card.Subtitle className="mb-2 ">Upcoming</Card.Subtitle>
+                  <Card.Text>Woohoo, no work due soon!</Card.Text>
+                  <Card.Link href="#">View All</Card.Link>
+                </small>
+              </Card.Body>
+            </Card>
+          </div>
+          <div className="col-12 col-sm-8">
             <TaskForm
               onPost={this.handleTaskPost}
               theme={group.theme}
               user={user}
               group={group}
+              taskCounter={taskCounter}
             />
+
             {tasks && (
               <TaskTab
                 theme={group.theme}
                 tasks={tasks}
                 user={user}
+                taskCounter={taskCounter}
                 onPost={this.handleTaskPost}
                 onDelete={this.handleTaskDelete}
               />
             )}
-          </div>
-          <div className="col-3">
-            {taskCounter &&
-              taskCounter.map((task) => (
-                <Card
-                  border={task.theme}
-                  key={task.title}
-                  bg="light"
-                  style={{ width: "15rem" }}
-                  className="mb-2 text-center"
-                >
-                  <Card.Header>
-                    <h5>{task.title}</h5>
-                  </Card.Header>
-                  <Alert variant={task.theme}>
-                    <Card.Body>
-                      <Card.Title>
-                        <h1>{task.number}</h1>
-                      </Card.Title>
-                    </Card.Body>
-                  </Alert>
-                </Card>
-              ))}
           </div>
         </div>
       </>

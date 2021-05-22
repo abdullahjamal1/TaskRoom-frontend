@@ -4,6 +4,7 @@ import Joi from "joi-browser";
 import auth from "../services/authService";
 import * as userService from "../services/userService";
 import Alert from "react-bootstrap/Alert";
+import { Button } from "react-bootstrap/Button";
 
 class RegisterForm extends Form {
   state = {
@@ -78,7 +79,7 @@ class RegisterForm extends Form {
           ></img>
         </div>
         <form className="col" onSubmit={this.handleSubmit}>
-          <h1>Register</h1>
+          <h2>Register</h2>
           {this.renderInput("email", "Email")}
           {this.renderInput(
             "username",
@@ -93,6 +94,20 @@ class RegisterForm extends Form {
           )}
           {this.renderInput("password", "Password", "password")}
           {this.renderResponse()}
+          <div className="col-12 d-flex justify-content-center">
+            OR Sign up with
+          </div>
+          <div className="col-12 d-flex justify-content-center">
+            <div className="btn btn-sm btn-danger m-2">
+              <i className="fa fa-2x fa-google" aria-hidden="true"></i>
+            </div>
+            <div className="btn btn-sm btn-primary m-2">
+              <i class="fa fa-2x fa-facebook" aria-hidden="true"></i>
+            </div>
+            <div className="btn btn-sm btn-primary m-2">
+              <i className="fa fa-2x fa-linkedin" aria-hidden="true"></i>
+            </div>
+          </div>
           {this.renderButton("Register")}
         </form>
       </div>

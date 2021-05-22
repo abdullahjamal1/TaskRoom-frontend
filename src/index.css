@@ -11,3 +11,8 @@ body{
 .clickable{
   cursor: pointer;
 }
+
+.stickyCustom{
+  position: sticky;
+  top: 0;
+}

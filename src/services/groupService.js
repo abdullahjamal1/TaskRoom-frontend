@@ -7,13 +7,16 @@ function groupUrl(id) {
     return `${apiEndPoint}/${id}`;
 }
 export function getGroups() {
-    return http.get(apiEndPoint, { headers: { Authorization: getJwt() } });
+    return http.get(apiEndPoint, {}, { headers: { Authorization: getJwt() } });
 }
 
 export function getGroup(groupId) {
-    return http.get(groupUrl(groupId), { headers: { Authorization: getJwt() } });
+    return http.get(groupUrl(groupId), {}, { headers: { Authorization: getJwt() } });
 }
 
+export function leaveGroup(groupId){
+    return http.get(`${groupUrl(groupId)}/leave`, {}, { headers: { Authorization: getJwt() } });
+}
 export function saveGroup(title,
     description,
     theme,

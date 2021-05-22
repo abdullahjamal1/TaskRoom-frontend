@@ -3,12 +3,13 @@ import { paginate } from "../utils/paginate";
 import _, { filter } from "lodash";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { deleteGroup, getGroup } from "../services/groupService";
+import { deleteGroup, getGroup, leaveGroup } from "../services/groupService";
 import { getUser } from "../services/userService";
 import Pagination from "./common/pagination";
 import SearchBox from "./common/searchBox";
 import GroupCard from "./common/GroupCard";
 import authService from "../services/authService";
+import LoadingScreen from "./loadingScreen";
 
 class Groups extends Component {
   state = {
@@ -16,6 +17,7 @@ class Groups extends Component {
     currentPage: 1,
     pageSize: 6,
     searchQuery: "",
+    isLoading: true
   };
 
   getPageData = () => {
@@ -38,8 +40,11 @@ class Groups extends Component {
     return { totalCount: filtered.length, data: groups };
   };
 
+ 
+
   async componentDidMount() {
     // get user
+    this.setState({isLoading: true});
     const response = await getUser(authService.getCurrentUser().sub); // username
 
     if (response.status === 200) {
@@ -89,6 +94,15 @@ class Groups extends Component {
     this.setState({ searchQuery: query, currentPage: 1 });
   };
 
+  handleLeave = async (groupId) =>{
+     try {
+      await leaveGroup(groupId);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        toast.error(ex);
+    }
+  };
+
   handleGroupDelete = async (groupId) => {
     await deleteGroup(groupId);
     const { groups } = this.state.groups.filter(
@@ -103,6 +117,10 @@ class Groups extends Component {
     const { user } = this.props;
     const { totalCount, data } = this.getPageData();
 
+    if(this.state.isLoading && !groups){
+      return <LoadingScreen/>;
+    }
+
     return (
       <div>
         <div className="row m-1">
@@ -111,7 +129,7 @@ class Groups extends Component {
             className="btn btn-info"
             style={{ marginBottom: 20 }}
           >
-            New group
+            +
           </Link>
           <p className="ml-4">showing {totalCount} groups in the database</p>
         </div>
@@ -125,6 +143,7 @@ class Groups extends Component {
           groups={data}
           user={user}
           onDelete={this.handleGroupDelete}
+          onLeave={this.handleLeave}
         />
         <div className="row">
           <Pagination

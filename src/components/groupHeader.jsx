@@ -9,18 +9,24 @@ const GroupHeader = ({ group, user }) => {
   };
   return (
     <Card
-      //   bg={group.theme.toLowerCase()}
+      bg={group.theme.toLowerCase()}
       border={group.theme.toLowerCase()}
       key={group._id}
-      //   text={group.theme.toLowerCase() === "light" ? "dark" : "white"}
+      text={group.theme.toLowerCase() === "light" ? "dark" : "white"}
       // style={{ width: "25rem" }}
       className="m-1"
     >
       <Card.Body>
-        <Card.Title className={`text-${group.theme.toLowerCase()}`}>
+        <Card.Title
+          className={`text-${
+            group.theme.toLowerCase() === "light" ? "dark" : "white"
+          }`}
+        >
           <Row>
             {" "}
-            <Col md={6}>{group.title}</Col>
+            <Col md={6}>
+              <h2>{group.title}</h2>
+            </Col>
             <Col md={5}></Col>
             <Col md={{ span: 1, order: "last" }}>
               <Dropdown>
@@ -51,14 +57,18 @@ const GroupHeader = ({ group, user }) => {
           </Row>
         </Card.Title>
         <Link to={`/users/${group.admin}`}>
-          <Card.Subtitle className="mb-2 text-muted">
+          <Card.Subtitle
+            className={`mb-2 text-${
+              group.theme.toLowerCase() === "light" ? "dark" : "white"
+            }`}
+          >
             {group.admin}
           </Card.Subtitle>
         </Link>
         <Card.Text>{group.description}</Card.Text>
       </Card.Body>
       <Card.Footer>
-        <small className="text-muted">
+        <small className="">
           <i class="fa fa-clock-o" aria-hidden="true"></i> Created On{" "}
           {(new Date(group.creationTime) + " ").substr(0, 21)}{" "}
         </small>{" "}

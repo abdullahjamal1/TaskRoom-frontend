@@ -1,9 +1,16 @@
 import React from "react";
 import "../../App.css";
-import { Card, Col, Row, Dropdown } from "react-bootstrap";
+import {
+  Card,
+  Col,
+  Row,
+  Dropdown,
+  ListGroup,
+  ListGroupItem,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const GroupCard = ({ groups, user, onDelete }) => {
+const GroupCard = ({ groups, user, onDelete, onLeave }) => {
   return (
     <div className="row">
       {groups.map((group) => (
@@ -14,7 +21,7 @@ const GroupCard = ({ groups, user, onDelete }) => {
             border={group.theme.toLowerCase()}
             // text={group.theme.toLowerCase() === "light" ? "dark" : "white"}
             // style={{ width: "25rem" }}
-            className="m-1"
+            className="shadow bg-body rounded"
           >
             <Card.Body>
               <Card.Title>
@@ -28,8 +35,8 @@ const GroupCard = ({ groups, user, onDelete }) => {
                       {group.title}
                     </Link>
                   </Col>
-                  <Col md={{ span: 2, order: "last" }}>
-                    <Dropdown>
+                  <Col md={{ span: 1, order: "last" }}>
+                    <Dropdown size="sm">
                       <Dropdown.Toggle
                         variant={group.theme.toLowerCase()}
                         id="dropdown-basic"
@@ -52,6 +59,15 @@ const GroupCard = ({ groups, user, onDelete }) => {
                             </Dropdown.Item>
                           </>
                         )}
+                        {user.sub !== group.admin && (
+                          <>
+                            <Dropdown.Item>
+                              <div onClick={() => onLeave(group._id)}>
+                                Unenroll
+                              </div>
+                            </Dropdown.Item>
+                          </>
+                        )}
                       </Dropdown.Menu>
                     </Dropdown>
                   </Col>
@@ -62,13 +78,6 @@ const GroupCard = ({ groups, user, onDelete }) => {
                   {group.admin}
                 </Card.Subtitle>
               </Link>
-              {/* <Card.Text>
-                {group.description.substr(
-                  0,
-                  Math.min(group.description.length, 140)
-                )}
-                {group.description.length >= 140 && " ...."}
-              </Card.Text> */}
             </Card.Body>
             <Card.Footer>
               <small className="text-muted">

@@ -15,8 +15,6 @@ import CommentContainer from "./commentContainer";
 const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
   if (!tasks) return <div></div>;
 
-  console.log(status);
-
   const renderStatus = (isCompleted, dueTime) => {
     if (isCompleted === true)
       return <Badge variant="success ml-2">completed</Badge>;
@@ -32,14 +30,20 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
 
   const filterTasks = () => {
     let filteredTasks;
-    if (status === "All") filteredTasks = tasks;
-    else if (status === "completed")
+    if (status === "All Tasks") filteredTasks = tasks;
+    else if (status === "Completed")
       filteredTasks = tasks.filter((task) => task.completed === true);
-    else if (status === "missing") {
-      filteredTasks = tasks.filter(
-        (tasks) => new Date(tasks.dueTime) < new Date()
+    else if (status === "Missing") {
+    filteredTasks = tasks.filter(
+        (task) => new Date(task.dueTime) < new Date() && task.completed !== true
       );
-    } else filteredTasks = tasks.filter((task) => task.completed !== true);
+    } 
+    else if (status === "ToDo"){
+    filteredTasks = tasks.filter(
+        (task) => ( new Date(task.dueTime) > new Date() && (task.completed !== true)  )
+      );
+    }
+
     tasks = filteredTasks;
   };
   filterTasks();
@@ -59,14 +63,14 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
             <Card.Title class>
               <Row>
                 {" "}
-                <Col md={7}>
-                  <h5>
+                <Col md={6}>
+                  <h6>
                     {task.title} {renderStatus(task.completed, task.dueTime)}
-                  </h5>
+                  </h6>
                 </Col>
-                <Col md={4}>
-                  <i class="fa fa-clock-o" aria-hidden="true">
-                    {" "}
+                <Col md={5}>
+                  <i className="fa fa-clock-o" aria-hidden="true">
+                    {"  "}
                     Due On {(new Date(task.dueTime) + " ").substr(0, 21)}
                   </i>
                 </Col>
@@ -86,16 +90,29 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
                         {user.sub === task.author && (
                           <>
                             <Dropdown.Item>
-                              <Link to={`taskForm/${task._id}`}>Update</Link>
+                              <Link to={`taskForm/${task._id}`}>
+                                <i
+                                  class="fa fa-pencil-square-o"
+                                  aria-hidden="true"
+                                ></i>{" "}
+                                Update
+                              </Link>
                             </Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">
+
+                            <Dropdown.Item>
                               <div onClick={() => onDelete(task._id)}>
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>{" "}
                                 Delete
                               </div>
                             </Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">
+
+                            <Dropdown.Item>
                               <div onClick={() => onComplete(task)}>
-                                Mark Completed
+                                <i
+                                  class="fa fa-check-circle-o"
+                                  aria-hidden="true"
+                                ></i>
+                                {" "} Mark Completed
                               </div>
                             </Dropdown.Item>
                           </>
