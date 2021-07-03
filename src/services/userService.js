@@ -1,13 +1,9 @@
 import { getJwt } from './authService';
 import http from './httpService';
-const apiEndPoint = "/auth/register";
+const apiEndPoint = "/users/register";
 
 export function register(user) {
-    return http.post(apiEndPoint, {
-        email: user.email,
-        password: user.password,
-        username: user.username
-    });
+    return http.post(apiEndPoint, user);
 }
 
 function userUrl(id) {
@@ -18,20 +14,20 @@ export function getUser(id) {
     return http.get(userUrl(id));
 }
 
-export function getAllUsernames() {
-    return http.get("/users", {}, { headers: { Authorization: getJwt() } });
+export function getLoggedUser(){
+    return http.get('/users/me');
 }
 
 export function getAllUsers() {
-    return http.get("/users", {}, { headers: { Authorization: getJwt() } });
+    return http.get("/users");
 }
 
 export function deleteUser(id) {
-    return http.delete(userUrl(id), {}, { headers: { Authorization: getJwt() } });
+    return http.delete(userUrl(id));
 }
 
 export function updateUser(id, user) {
-    return http.put(userUrl(id), user, { headers: { Authorization: getJwt() } });
+    return http.put(userUrl(id), user);
 }
 
 export function getDefaultAvatar({ target }) {

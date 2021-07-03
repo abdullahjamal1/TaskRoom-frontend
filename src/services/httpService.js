@@ -18,18 +18,7 @@ axios.interceptors.response.use(null, error => {
 
 function setJwt(jwt) {
 
-    // puts x-auth-token in the header of every http request
-
-    // axios.defaults.headers.common['x-auth-token'] = jwt;
-    // axios.defaults.headers.post['Authorization'] = jwt;
-    axios.defaults.headers.put['Authorization'] = jwt;
-    axios.defaults.headers.get['Authorization'] = jwt;
-    axios.defaults.headers.delete['Authorization'] = jwt;
-    axios.defaults.headers.head['Access-Control-Allow-Origin'] = "*";
-
-    //
-
-
+    axios.defaults.headers.common['x-auth-token'] = jwt;
 }
 
 export default {

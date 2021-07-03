@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 
+// document.title = "TaskRoom";
+
 ReactDOM.render(
   <BrowserRouter>
     <App />

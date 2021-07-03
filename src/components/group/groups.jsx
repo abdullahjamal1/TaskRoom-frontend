@@ -1,15 +1,22 @@
 import React, { Component } from "react";
-import { paginate } from "../utils/paginate";
+import { paginate } from "../../utils/paginate";
 import _, { filter } from "lodash";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { deleteGroup, getGroup, leaveGroup } from "../services/groupService";
-import { getUser } from "../services/userService";
-import Pagination from "./common/pagination";
-import SearchBox from "./common/searchBox";
-import GroupCard from "./common/GroupCard";
-import authService from "../services/authService";
-import LoadingScreen from "./loadingScreen";
+import {
+  deleteGroup,
+  getGroups,
+  leaveGroup,
+} from "../../services/groupService";
+import { getUser } from "../../services/userService";
+import Pagination from "../common/pagination";
+import SearchBox from "../common/searchBox";
+import GroupCard from "./GroupCard";
+import authService from "../../services/authService";
+import LoadingScreen from "../loadingScreen";
+
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
 class Groups extends Component {
   state = {
@@ -17,7 +24,7 @@ class Groups extends Component {
     currentPage: 1,
     pageSize: 6,
     searchQuery: "",
-    isLoading: true
+    isLoading: true,
   };
 
   getPageData = () => {
@@ -40,30 +47,13 @@ class Groups extends Component {
     return { totalCount: filtered.length, data: groups };
   };
 
- 
-
   async componentDidMount() {
     // get user
-    this.setState({isLoading: true});
-    const response = await getUser(authService.getCurrentUser().sub); // username
+    this.setState({ isLoading: true });
 
-    if (response.status === 200) {
-      const { groups: groupList } = response.data;
-
-      let groups = [];
-
-      if (response.data.length <= 0 || groupList === null) return;
-      for (let g = 0; g < groupList.length; g++) {
-        const { data: groupInfo, status } = await getGroup(groupList[g]);
-        if (status === 200) {
-          groups.push(groupInfo);
-        }
-      }
-      if (groups.length === groupList.length) {
-        this.setState({ groups });
-      }
-    }
-    // this.setState({ groups });
+    const { data: groups } = await getGroups();
+    console.log(groups);
+    this.setState({ groups });
   }
 
   handleDelete = async (group) => {
@@ -94,21 +84,25 @@ class Groups extends Component {
     this.setState({ searchQuery: query, currentPage: 1 });
   };
 
-  handleLeave = async (groupId) =>{
-     try {
+  handleLeave = async (groupId) => {
+    try {
       await leaveGroup(groupId);
     } catch (ex) {
-      if (ex.response && ex.response.status === 404)
-        toast.error(ex);
+      if (ex.response && ex.response.status === 404) toast.error(ex);
     }
   };
 
   handleGroupDelete = async (groupId) => {
-    await deleteGroup(groupId);
-    const { groups } = this.state.groups.filter(
-      (group) => group._id !== groupId
-    );
-    this.setState(groups);
+    try {
+      const res = await deleteGroup(groupId);
+      if(res.status === 200){
+        let groups = [...this.state.groups];
+        groups = groups.filter((group) => group._id !== groupId);
+        this.setState({groups});
+      }
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404) toast.error(ex);
+    }
   };
 
   render() {
@@ -117,12 +111,12 @@ class Groups extends Component {
     const { user } = this.props;
     const { totalCount, data } = this.getPageData();
 
-    if(this.state.isLoading && !groups){
-      return <LoadingScreen/>;
+    if (this.state.isLoading && !groups) {
+      return <LoadingScreen />;
     }
 
     return (
-      <div>
+      <Container>
         <div className="row m-1">
           <Link
             to="/groupForm/new"
@@ -131,7 +125,6 @@ class Groups extends Component {
           >
             +
           </Link>
-          <p className="ml-4">showing {totalCount} groups in the database</p>
         </div>
         <div className="row">
           <SearchBox value={searchQuery} onChange={this.handleSearch} />
@@ -153,7 +146,7 @@ class Groups extends Component {
             onPageChange={this.handlePageChange}
           />
         </div>
-      </div>
+      </Container>
     );
   }
 }

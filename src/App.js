@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import { Route, Redirect, Switch } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
-import Groups from './components/groups';
-import NotFound from "./components/notFound";
-import NavBar from "./components/navBar";
-import GroupForm from "./components/groupForm";
-import LoginModal from "./components/loginModal";
-import RegisterForm from './components/registerForm';
-import Logout from './components/logout';
-import auth from './services/authService';
-import GroupView from './components/groupView';
+
 import ProtectedRoute from './components/common/protectedRoute';
+import NotFound from "./components/common/notFound";
+import Groups from './components/group/groups';
+import GroupView from './components/group/groupView';
+import GroupForm from "./components/group/groupForm";
+
+import LoginModal from "./components/auth/loginModal";
+import RegisterForm from './components/auth/registerForm';
+import Logout from './components/auth/logout';
+import ResetPassword from './components/auth/resetPassword';
+import ResetPasswordChange from './components/auth/resetPasswordChange';
+
+import NavBar from "./components/navBar";
+import auth from './services/authService';
 import LoginContext from './contexts/loginContext';
 import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
-import Profile from './components/profile';
-import Users from './components/users';
-import ResetPassword from './components/resetPassword';
-import ResetPasswordChange from './components/resetPasswordChange';
 import Footer from './components/footer';
-import Task from './components/task';
-import SidebarMenu from './components/common/sidebar';
+import Task from './components/task/task';
+import OauthCallback from './components/auth/callback';
 
 class App extends Component {
   state = {
@@ -39,7 +40,7 @@ class App extends Component {
   }
   render() {
 
-    const { user } = this.state;
+    const { user, showSidebar } = this.state;
 
     return (
       <LoginContext.Provider value={{
@@ -52,7 +53,8 @@ class App extends Component {
       }}>
         <ToastContainer />
         <LoginModal />
-        <NavBar user={user} />
+        {/* <SidebarMenu showSidebar={showSidebar} /> */}
+        <NavBar user={user} toggleSidebar={this.toggleSidebar} />
         <main className="container">
           <Switch>
             <Route path="/register" component={RegisterForm} />
@@ -60,14 +62,13 @@ class App extends Component {
             <Route path="/logout" component={Logout} />
             <Route path="/reset-password" component={ResetPassword} />
             <Route path="/reset-password-change" component={ResetPasswordChange} />
+            <Route path="/callback" component={OauthCallback} />
             <ProtectedRoute
               path="/groupForm/:id"
               component={GroupForm}
             />
             <ProtectedRoute path="/groups/tasks/:id" component={Task} />
             <ProtectedRoute path="/groups/:id" component={GroupView} />
-            <ProtectedRoute path="/users/:username" component={Profile} />
-            <ProtectedRoute path="/users" component={Users} />
             <ProtectedRoute path="/groups"
               render={props => <Groups {...props} user={this.state.user} />}></ProtectedRoute>
             <Route path="/not-found" component={NotFound}></Route>

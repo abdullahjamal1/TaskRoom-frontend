@@ -7,15 +7,15 @@ function groupUrl(id) {
     return `${apiEndPoint}/${id}`;
 }
 export function getGroups() {
-    return http.get(apiEndPoint, {}, { headers: { Authorization: getJwt() } });
+    return http.get(apiEndPoint);
 }
 
 export function getGroup(groupId) {
-    return http.get(groupUrl(groupId), {}, { headers: { Authorization: getJwt() } });
+    return http.get(groupUrl(groupId));
 }
 
 export function leaveGroup(groupId){
-    return http.get(`${groupUrl(groupId)}/leave`, {}, { headers: { Authorization: getJwt() } });
+    return http.get(`${groupUrl(groupId)}/leave`);
 }
 export function saveGroup(title,
     description,
@@ -29,23 +29,21 @@ export function saveGroup(title,
         theme,
         members,
         admins
-    }, { headers: { Authorization: getJwt() } });
+    });
 
 }
 
 export function updateGroup(title,
     description,
     theme,
-    members,
-    admins, _id) {
+    members, _id) {
 
     return http.put(groupUrl(_id), {
         title,
         description,
         theme,
-        members,
-        admins
-    }, { headers: { Authorization: getJwt() } });
+        members
+    }, { headers: { 'x-auth-token': getJwt() } });
 
 }
 

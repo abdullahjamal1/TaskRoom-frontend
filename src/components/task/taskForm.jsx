@@ -1,9 +1,9 @@
 import React from "react";
-import Form from "./common/form";
+import Form from "../common/form";
 import Joi from "joi-browser";
 import { Badge, Button, ProgressBar } from "react-bootstrap";
 import Collapse from "react-bootstrap/Collapse";
-import LoginContext from "../contexts/loginContext";
+import LoginContext from "../../contexts/loginContext";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
@@ -41,21 +41,20 @@ class TaskForm extends Form {
 
     return (
       <>
-                      <div className="row">
-                        <div className="col-sm-2 col-12">
-                          {(user.sub === group.admin || group.admins.includes(user.sub)) && (
-                            <Button
-                              onClick={() => this.setOpen(!open)}
-                              aria-controls="example-collapse-text"
-                              aria-expanded={open}
-                              className={`btn btn-${theme.toLowerCase()} mb-2`}
-                            >
-                              New Task
-                            </Button>
-                          )}
-                        </div>
-                        
-                      </div>
+        <div className="row">
+          <div className="col-sm-2 col-12">
+            {(user._id === group.admin._id) && (
+              <Button
+                onClick={() => this.setOpen(!open)}
+                aria-controls="example-collapse-text"
+                aria-expanded={open}
+                className={`btn btn-${theme} mb-2`}
+              >
+                New Task
+              </Button>
+            )}
+          </div>
+        </div>
 
         <Collapse in={open}>
           <div id="example-collapse-text">

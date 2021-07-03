@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getTask } from "../services/taskService";
+import { getTask } from "../../services/taskService";
 
 class Task extends Component {
   state = { task: {} };

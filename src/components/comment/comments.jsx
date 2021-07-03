@@ -5,9 +5,8 @@ import {
   getComments,
   postComment,
   voteComment,
-} from "../services/commentService";
-import LoginContext from "../contexts/loginContext";
-import { getAvatar, getDefaultAvatar } from "../services/userService";
+} from "../../services/commentService";
+import { getAvatar, getDefaultAvatar } from "../../services/userService";
 
 class Comments extends Component {
   state = {
@@ -77,8 +76,6 @@ class Comments extends Component {
     );
   }
 }
-
-Comments.contextType = LoginContext;
 
 const Reply = ({ parentId, taskId, onComment }) => {
   return (

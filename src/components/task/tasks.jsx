@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
-import { deleteTask, getTasks } from "../services/taskService";
+import { deleteTask, getTasks } from "../../services/taskService";
 import {
   Card,
   Col,
@@ -10,7 +10,7 @@ import {
   Badge,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import CommentContainer from "./commentContainer";
+import CommentContainer from "../comment/commentContainer";
 
 const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
   if (!tasks) return <div></div>;
@@ -34,13 +34,12 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
     else if (status === "Completed")
       filteredTasks = tasks.filter((task) => task.completed === true);
     else if (status === "Missing") {
-    filteredTasks = tasks.filter(
+      filteredTasks = tasks.filter(
         (task) => new Date(task.dueTime) < new Date() && task.completed !== true
       );
-    } 
-    else if (status === "ToDo"){
-    filteredTasks = tasks.filter(
-        (task) => ( new Date(task.dueTime) > new Date() && (task.completed !== true)  )
+    } else if (status === "ToDo") {
+      filteredTasks = tasks.filter(
+        (task) => new Date(task.dueTime) > new Date() && task.completed !== true
       );
     }
 
@@ -87,7 +86,7 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
                         <Dropdown.Item>
                           <Link to={"tasks/" + task._id}>View</Link>
                         </Dropdown.Item>
-                        {user.sub === task.author && (
+                        {user.name === task.author.name.name && (
                           <>
                             <Dropdown.Item>
                               <Link to={`taskForm/${task._id}`}>
@@ -111,8 +110,8 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
                                 <i
                                   class="fa fa-check-circle-o"
                                   aria-hidden="true"
-                                ></i>
-                                {" "} Mark Completed
+                                ></i>{" "}
+                                Mark Completed
                               </div>
                             </Dropdown.Item>
                           </>
@@ -123,9 +122,9 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
                 </Col>
               </Row>
             </Card.Title>
-            <Link to={`/users/${task.author}`}>
+            <Link to={`/users/${task.author._id}`}>
               <Card.Subtitle className="mb-2 text-muted">
-                {task.author}{" "}
+                {task.author.name}{" "}
               </Card.Subtitle>
             </Link>
             <small className="text-muted">

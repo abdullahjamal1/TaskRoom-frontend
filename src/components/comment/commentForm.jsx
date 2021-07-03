@@ -1,9 +1,8 @@
 import React from "react";
-import Form from "./common/form";
+import Form from "../common/form";
 import Joi from "joi-browser";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
-import LoginContext from "../contexts/loginContext";
 
 class CommentForm extends Form {
   state = {
@@ -75,7 +74,5 @@ class CommentForm extends Form {
     );
   }
 }
-
-CommentForm.contextType = LoginContext;
 
 export default CommentForm;

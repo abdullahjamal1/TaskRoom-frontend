@@ -76,18 +76,17 @@ class Form extends Component {
     );
   }
 
-  renderInput(name, label, type, ...rest) {
+  renderInput(name, label, type) {
     const { data, errors } = this.state;
 
     return (
       <Input
         type={type}
         name={name}
-        // value={data[name]}
+        value={data[name]}
         label={label}
         onChange={this.handleChange}
         error={errors[name]}
-        {...rest}
       />
     );
   }

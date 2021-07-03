@@ -6,13 +6,13 @@ const tokenKey = "token";
 
 httpService.setJwt(getJwt());
 
-export async function login(username, password) {
+export async function login(data) {
 
     // let instance = httpService.create();
     // delete instance.defaults.headers.common['Authorization'];
 
-    const { data: jwt } = await httpService.post(`${apiEndPoint}/login`, { username, password });
-    localStorage.setItem(tokenKey, jwt.jwt);
+    const { data: jwt } = await httpService.post(`${apiEndPoint}/login`, data);
+    localStorage.setItem(tokenKey, jwt);
 
     // instance.defaults.headers.common['Authorization'] = jwt.jwt;
 
@@ -20,10 +20,6 @@ export async function login(username, password) {
 
 export function logout() {
     localStorage.removeItem(tokenKey);
-}
-
-export function isUsernameUnique(username) {
-    return httpService.get("/user/username?username=" + username);
 }
 
 export function loginWithJwt(jwt) {
@@ -39,12 +35,12 @@ export function getCurrentUser() {
     }
 }
 
-export function resetPasswordSendMail({ email }) {
-    return httpService.post(`${apiEndPoint}/reset-password`, {}, { params: { email } });
+export function resetPasswordSendMail(email) {
+    return httpService.post(`users/reset-password`, email);
 }
 
 export function resetPassword(password, token) {
-    return httpService.post(`${apiEndPoint}/reset-password-change`, {}, { params: { password, token } });
+    return httpService.post(`users/reset-password-change`, { password }, { params: { token } });
 }
 
 export function getJwt() {
@@ -56,6 +52,5 @@ export default {
     loginWithJwt,
     logout,
     getCurrentUser,
-    getJwt,
-    isUsernameUnique
+    getJwt
 }

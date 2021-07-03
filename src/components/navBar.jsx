@@ -1,94 +1,139 @@
-import React, { useContext } from "react";
-import { NavLink, Link } from "react-router-dom";
+import React, {useContext} from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import Link from "@material-ui/core/Link";
 import LoginContext from "../contexts/loginContext";
-import {
-  Col,
-  Image,
-  Navbar,
-  Nav,
-  Form,
-  Button,
-  FormControl,
-  NavDropdown,
-} from "react-bootstrap";
-import { getDefaultAvatar, getAvatar } from "../services/userService";
-import SidebarMenu from "./common/sidebar";
 
-const NavBar = ({ user }) => {
+
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Avatar from "@material-ui/core/Avatar";
+import ImageIcon from "@material-ui/icons/Image";
+import CloseIcon from '@material-ui/icons/Close';
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
+
+import PersonIcon from "@material-ui/icons/Person";
+import EmailIcon from "@material-ui/icons/Email";
+import EditIcon from "@material-ui/icons/Edit";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Fab from '@material-ui/core/Fab';
+import LockIcon from '@material-ui/icons/Lock';
+import SaveIcon from '@material-ui/icons/Save';
+import ProfileDialog from './profile/profileDialog';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  avatar_large: {
+    width: theme.spacing(12),
+    height: theme.spacing(12),
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+}));
+
+const NavBar = ({ user, toggleSidebar }) => {
+
   const loginModal = useContext(LoginContext);
-  return (
-    <>
-      <Navbar
-        bg="info"
-        variant="dark"
-        expand="lg"
-        className="sticky-top shadow-sm"
-      >
-            <button className="btn btn-info m-2 p-1">
-              <i class="fa fa-bars" aria-hidden="true"></i>
-            </button>
-            <Navbar.Brand href="/groups" className="">
-              {/* <i class="fa fa-bars mr-4" aria-hidden="true"></i> */}
-              <i class="fa fa-thumb-tack" aria-hidden="true"></i> TaskRoom
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+  const classes = useStyles();
   
-            {" "}
-            <Navbar.Collapse id="basic-navbar-nav">
-              {/* <Form inline>
-      <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-      <Button variant="outline-success">Search</Button>
-    </Form> */}
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const [profileOpen, setOpen] = React.useState(false);
 
-      
+  const handleProfileOpen = () => {
+    setOpen(true);
+  };
 
-              {!user && (
-                <React.Fragment>
-                  <Nav.Link
-                    className="nav-link nav-item btn btn-info mr-sm-2 border-dark"
-                    onClick={loginModal.onHandleShow}
-                    href="#"
-                  >
-                    Login <i class="fa fa-sign-in" aria-hidden="true"></i>
-                  </Nav.Link>
+  const handleProfileClose = () => {
+    setOpen(false);
+  };
 
-                  <Nav.Link
-                    className="nav-link nav-item  navbar-right btn btn-info border-dark"
-                    href="/register"
-                  >
-                    Sign Up
-                  </Nav.Link>
-                </React.Fragment>
-              )}
-              {user && (
-                <React.Fragment>
-                  <Nav.Link
-                    className="nav-link nav-item btn btn-info"
-                    href={`/users/${user.sub}`}
-                  >
-                    {/* <img
-                onError={getDefaultAvatar}
-                src={getAvatar(1)}
-                styles={{ maxWidth: "5 px", maxHeight: "5 px" }}
-                className="thumbnail mr-2"
-              /> */}
-                    {user.sub}
-                  </Nav.Link>
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-                  <Nav.Link
-                    className="nav-link nav-item btn btn-info"
-                    href="/logout"
-                  >
-                    Logout <i class="fa fa-sign-out" aria-hidden="true"></i>
-                  </Nav.Link>
-                </React.Fragment>
-              )}
-            </Navbar.Collapse>
-    
-      </Navbar>
-      {/* <SidebarMenu /> */}
-    </>
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const isLogged = user || false;
+
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" color="primary">
+        <Toolbar>
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title} >
+          <Link href="/groups" color="inherit">
+            <i class="fa fa-thumb-tack" aria-hidden="true" ></i> TaskRoom
+          </Link>
+          </Typography>
+          {isLogged &&
+            <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                open={open}
+                keepMounted
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleProfileOpen}>Profile</MenuItem>
+                <MenuItem onClick={() => document.location.href = "/logout"} >Logout</MenuItem>
+              </Menu>
+              <ProfileDialog open={profileOpen} handleClose={handleProfileClose}  />
+            </div>
+          }
+          {!isLogged &&
+          <Button onClick={loginModal.onHandleShow} variant="contained" size="small" color="secondary">Login</Button>
+          }
+        </Toolbar>
+      </AppBar>
+    </div>
   );
-};
-
+}
 export default NavBar;
+
