@@ -7,6 +7,7 @@ import NotFound from "./components/common/notFound";
 import Groups from './components/group/groups';
 import GroupView from './components/group/groupView';
 import GroupForm from "./components/group/groupForm";
+import GroupTabs from './components/group/groupTabs';
 
 import LoginModal from "./components/auth/loginModal";
 import RegisterForm from './components/auth/registerForm';
@@ -67,10 +68,11 @@ class App extends Component {
               path="/groupForm/:id"
               component={GroupForm}
             />
-            <ProtectedRoute path="/groups/tasks/:id" component={Task} />
-            <ProtectedRoute path="/groups/:id" component={GroupView} />
+            <ProtectedRoute path="/groups/:groupId/tasks/:taskId"
+              render={props => <Task {...props} user={this.state.user} />} />
+            <ProtectedRoute path="/groups/:id" component={GroupTabs} />
             <ProtectedRoute path="/groups"
-              render={props => <Groups {...props} user={this.state.user} />}></ProtectedRoute>
+              render={props => <Groups {...props} user={this.state.user} />} />
             <Route path="/not-found" component={NotFound}></Route>
             <Redirect exact from="/" to="/groups" />
             <Redirect to="/not-found" />

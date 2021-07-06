@@ -21,19 +21,20 @@ import Grid from "@material-ui/core/Grid";
 import { Link } from "react-router-dom";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import TaskForm from "./taskForm";
+import TaskFormDialog from "./taskForm";
 import Container from "@material-ui/core/Container";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import Chip from "@material-ui/core/Chip";
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import moment from 'moment';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import TimelineIcons from "@material-ui/icons/Timeline";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import moment from "moment";
+import SaveIcon from "@material-ui/icons/Save";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    maxWidth: 600,
     marginBottom: 10,
+    padding: "6px 16px",
+    marginLeft: theme.spacing(2),
   },
   media: {
     height: 0,
@@ -41,38 +42,78 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     backgroundColor: red[500],
-    width: theme.spacing(3),
-    height: theme.spacing(3),
+    width: theme.spacing(4),
+    height: theme.spacing(4),
   },
 }));
 
-export default function TaskCard({ task }) {
+export default function TaskCardDetailed({
+  task,
+  onDelete,
+  onStatusChange,
+  onPost,
+}) {
   const classes = useStyles();
 
-  if(!task) return <div></div>;
+  const [anchor, setAnchor] = React.useState(null);
+  const menuOpen = Boolean(anchor);
+  const [formOpen, setFormOpen] = React.useState(false);
+
+  const handleFormOpen = () => {
+    setAnchor(null);
+    setFormOpen(true);
+  };
+
+  const handleMenu = (event) => {
+    setAnchor(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setFormOpen(false);
+    setAnchor(null);
+  };
+
+  if (!task) return <div></div>;
 
   return (
-    <Link
-      to={`/groups/${task.groupId}/tasks/${task._id}`}
-      style={{ textDecoration: "none" }}
-    >
+    <>
+      <TaskFormDialog
+        open={formOpen}
+        onClose={handleClose}
+        onPost={onPost}
+        task={task}
+      />
       <Card
         className={classes.root}
-        elevation={5}
+        elevation={1}
         style={{ backgroundColor: task.color }}
       >
         <CardHeader
           // action={
           // }
-          titleTypographyProps={{ variant: "strong" }}
-          title={<strong>{task.title}</strong>}
+          titleTypographyProps={{ variant: "h6" }}
+          title={
+            <>
+              {task.title + " "}
+              <Chip label={task.status} size="small" />
+            </>
+          }
           subheader={
             task.dueTime && (
               <>
-                <AccessTimeIcon fontSize="small" />
-                <small>{task.dueTime}</small>
+                <AccessTimeIcon />
+                <small>{moment(task.dueTime).format("LLLL")}</small>
               </>
             )
+          }
+          action={
+            <IconButton
+              aria-label="settings"
+              aria-haspopup="true"
+              onClick={handleMenu}
+            >
+              <MoreVertIcon />
+            </IconButton>
           }
         />
         <CardContent style={{ marginTop: -20 }}>
@@ -80,6 +121,9 @@ export default function TaskCard({ task }) {
             <Grid container direction="column" spacing={2}>
               <Grid item>
                 <Tags tags={task.tags} />
+              </Grid>
+              <Grid item>
+                <p>{task.description}</p>
               </Grid>
               <Grid
                 container
@@ -89,7 +133,7 @@ export default function TaskCard({ task }) {
               >
                 <Grid item>
                   <Grid container alignItems="center">
-                    <Grid item>
+                    <Grid item style={{ marginRight: 5 }}>
                       <Avatar
                         alt={task.author.name}
                         aria-label="recipe"
@@ -103,39 +147,53 @@ export default function TaskCard({ task }) {
                 </Grid>
                 <Grid item>
                   <ChatBubbleOutlineIcon
-                    style={{ fontSize: 17, marginRight: 2 }}
+                    fontSize="small"
+                    style={{ marginRight: 2 }}
                   />
-                  <small>{task.commentsCount}</small>
+                  {task.commentsCount}
                 </Grid>
-                {/* <Grid item>
-                  <TimelineIcons fontSize="small" />{" "}
-                  {task.timeline.length}
-                </Grid> */}
                 <Grid item>
-                  {
-                    <small>
-                      <CalendarTodayIcon style={{ fontSize: 15 }} />
-                      {moment(task.creationTime).format("LLLL").split(",")[1]}
-                    </small>
-                  }
+                  <AccessTimeIcon fontSize="small" />
+                  {moment(task.creationTime).format("LLLL")}
                 </Grid>
               </Grid>
             </Grid>
           </Typography>
+          <CardActions disableSpacing>
+            <Menu
+              id="settings"
+              anchorEl={anchor}
+              open={menuOpen}
+              keepMounted
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleFormOpen}>Update</MenuItem>
+              {["To Do", "Doing", "Done"].map((status) => (
+                <>
+                  {status !== task.status && (
+                    <MenuItem onClick={() => onStatusChange(status)}>
+                      Mark as {status}
+                    </MenuItem>
+                  )}
+                </>
+              ))}
+              <MenuItem onClick={() => onDelete(task._id)}>Delete</MenuItem>
+            </Menu>
+          </CardActions>
         </CardContent>
       </Card>
-    </Link>
+    </>
   );
 }
 
 function Tags({ tags }) {
   return (
     <Grid item container>
-      {  tags.map((tag) => (
-          <Grid item style={{margin: 5}}>
-            <Chip label={<small>{tag}</small>} color="primary" size="small" />
-          </Grid>
-        ))}
+      {tags.map((tag) => (
+        <Grid item style={{ margin: 5 }}>
+          <Chip label={tag} color="primary" size="small" />
+        </Grid>
+      ))}
     </Grid>
   );
 }

@@ -1,110 +1,255 @@
-import React from "react";
-import Form from "../common/form";
-import Joi from "joi-browser";
-import { Badge, Button, ProgressBar } from "react-bootstrap";
-import Collapse from "react-bootstrap/Collapse";
-import LoginContext from "../../contexts/loginContext";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import React, { useContext, useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import { postTask, updateTask } from "../../services/taskService";
 
-class TaskForm extends Form {
-  state = {
-    errors: {},
-    data: {
-      title: "",
-      description: "",
-      dueTime: "",
-    },
-    open: false,
-    isCompleted: "",
-    description: "",
-  };
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Avatar from "@material-ui/core/Avatar";
+import ImageIcon from "@material-ui/icons/Image";
+import CloseIcon from "@material-ui/icons/Close";
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
 
-  schema = {
-    title: Joi.string().required().label("title"),
-    description: Joi.string().required().label("description"),
-    dueTime: Joi.date().required().label("dueTime"),
-  };
+import MuiAlert from "@material-ui/lab/Alert";
+import { createBrowserHistory } from "history";
 
-  doSubmit = async () => {
-    const { title, description, dueTime } = this.state.data;
-    this.props.onPost({ title, description, dueTime });
-  };
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
 
-  setOpen = (open) => {
-    this.setState({ open });
-  };
-
-  render() {
-    const { open } = this.state;
-    const { theme, user, group, taskCounter } = this.props;
-
-    return (
-      <>
-        <div className="row">
-          <div className="col-sm-2 col-12">
-            {(user._id === group.admin._id) && (
-              <Button
-                onClick={() => this.setOpen(!open)}
-                aria-controls="example-collapse-text"
-                aria-expanded={open}
-                className={`btn btn-${theme} mb-2`}
-              >
-                New Task
-              </Button>
-            )}
-          </div>
-        </div>
-
-        <Collapse in={open}>
-          <div id="example-collapse-text">
-            <form onSubmit={this.handleSubmit}>
-              <div className="row">
-                <div className="col-6">
-                  {this.renderInput("title", "title")}
-                </div>
-                <div className="col-6">
-                  {this.renderInput("dueTime", "Due Time", "datetime-local")}
-                </div>
-              </div>
-              {/* <textarea
-                name="description"
-                className="form-control mb-2"
-                placeholder="description"
-                rows="4"
-                onChange={this.handleChange}
-              ></textarea> */}
-              <CKEditor
-                name="description"
-                editor={ClassicEditor}
-                data="<p>Hello from CKEditor 5!</p>"
-                onReady={(editor) => {
-                  // You can store the "editor" and use when it is needed.
-                  console.log("Editor is ready to use!", editor);
-                }}
-                onChange={(event, editor) => {
-                  const description = editor.getData();
-                  const currentTarget = {
-                    currentTarget: { name: "description", value: description },
-                  };
-                  console.log(currentTarget);
-                  this.handleChange(currentTarget);
-                  // this.setState({description});
-                  // console.log( { event, editor, data } );
-                }}
-                onBlur={(event, editor) => {
-                  console.log("Blur.", editor);
-                }}
-                onFocus={(event, editor) => {
-                  console.log("Focus.", editor);
-                }}
-              />
-              {this.renderButton("Post")}
-            </form>
-          </div>
-        </Collapse>
-      </>
-    );
-  }
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-export default TaskForm;
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  avatar_large: {
+    width: theme.spacing(12),
+    height: theme.spacing(12),
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+  textField: {
+    width: 270,
+  },
+}));
+
+const colors = [
+  { bg: "white", textColor: "black" },
+  { bg: "red", textColor: "white" },
+  { bg: "pink", textColor: "white" },
+  { bg: "purple", textColor: "white" },
+  // {bg: "deepPurple", textColor: "white"},
+  { bg: "indigo", textColor: "white" },
+  { bg: "blue", textColor: "white" },
+  // {bg: "deepOrange", textColor: "white"},
+  { bg: "lightBlue", textColor: "black" },
+  { bg: "cyan", textColor: "black" },
+  { bg: "teal", textColor: "black" },
+  { bg: "green", textColor: "black" },
+  { bg: "lightGreen", textColor: "black" },
+  { bg: "lime", textColor: "black" },
+  { bg: "yellow", textColor: "black" },
+  // {bg: "amber", textColor: "black"},
+  { bg: "orange", textColor: "black" },
+];
+
+export default function TaskFormDialog(props) {
+  const classes = useStyles();
+  const { open, onClose, onPost } = props;
+
+  return (
+    <>
+      <Dialog open={open} onClose={onClose} maxWidth="md">
+        <IconButton onClick={onClose} className={classes.closeButton}>
+          <CloseIcon />
+        </IconButton>
+
+        <DialogTitle id="form-dialog-title">Task Form</DialogTitle>
+        <TaskForm {...props} />
+      </Dialog>
+    </>
+  );
+}
+
+function TaskForm({ onPost, onClose, task: taskProp }) {
+  const classes = useStyles();
+  let [dueTime, setDueDate] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [tags, setTags] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [color, setColor] = useState(colors[0]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (taskProp) {
+      setDueDate(taskProp.dueDate);
+      setTitle(taskProp.title);
+      setTags(taskProp.tags);
+      setDescription(taskProp.description);
+    }
+  }, []);
+
+  const onSubmit = async () => {
+    const history = createBrowserHistory();
+    const groupId = history.location.pathname.toString().split("/")[2];
+    // dueTime += ":00.000Z";
+    let task = { title, description };
+    if (dueTime) task.dueTime = dueTime;
+    if (tags) task.tags = tags.toString().split(",");
+
+    try {
+      let newTask;
+
+      if (taskProp) {
+        task.status = taskProp.status;
+        const { data } = await updateTask(taskProp._id, groupId, task);
+        newTask = data;
+      } else {
+        const { data } = await postTask(groupId, task);
+        newTask = data;
+      }
+      onPost(newTask);
+      onClose();
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        setError(ex.response.data);
+      }
+    }
+  };
+  return (
+    <Container>
+      <Grid
+        container
+        direction="column"
+        justify="space-between"
+        alignItems="flex-start"
+        spacing={2}
+      >
+        <Grid item>
+          <TextField
+            id="date"
+            label="Due Date"
+            type="date"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            helperText={error && error}
+            error={error}
+            value={dueTime}
+            onChange={(event) => setDueDate(event.target.value)}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            required
+            extended
+            id="standard-helperText"
+            label="Title"
+            helperText={error && error}
+            error={error}
+            className={classes.textField}
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            required
+            extended
+            multiline
+            variant="outlined"
+            id="standard-helperText"
+            label="Tags"
+            helperText={(error && error) || "enter , seperated tags"}
+            error={error}
+            className={classes.textField}
+            value={tags}
+            onChange={(event) => setTags(event.target.value)}
+          />
+        </Grid>
+        <Grid item>
+          <FormControl
+            variant="outlined"
+            className={classes.textField}
+            style={{ backgroundColor: color.bg, color: color.textColor }}
+          >
+            <InputLabel id="demo-simple-select-outlined-label">
+              Theme
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={color}
+              onChange={(event) => setColor(event.target.value)}
+              label="Age"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {colors.map((color) => (
+                <MenuItem
+                  value={color}
+                  style={{
+                    backgroundColor: color.bg,
+                    color: color.textColor,
+                  }}
+                >
+                  {color.bg}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <TextField
+            required
+            multiline
+            variant="outlined"
+            extended
+            id="standard-helperText"
+            label="Description"
+            helperText={error && error}
+            error={error}
+            className={classes.textField}
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+          />
+        </Grid>
+        <Grid item>{error && <Alert severity="error">{error}</Alert>}</Grid>
+        <Grid
+          item
+          container
+          direction="column"
+          justify="center"
+          alignItems="center"
+        >
+          <Button onClick={onSubmit} variant="contained" color="success">
+            Save
+          </Button>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+}

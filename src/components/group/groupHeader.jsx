@@ -180,16 +180,17 @@ export default function GroupCard({ group, user }) {
           // titleTypographyProps={{ variant: "h6" }}
           title={group.title}
           subheader={
-            <Grid container spacing={4} alignItems="center">
-              <Grid item xs={1} sm={2}>
+            <Grid container alignItems="center">
+              <Grid item >
                 {" "}
                 <Avatar
                   alt={group.admin.name}
                   aria-label="recipe"
                   className={classes.avatar}
+                  style={{marginRight: 5}}
                 />
               </Grid>{" "}
-                <Grid item sm={10}><div>{group.admin.name}</div></Grid>
+                <Grid item><div>{group.admin.name}</div></Grid>
             </Grid>
           }
         />

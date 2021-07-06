@@ -11,23 +11,20 @@ export function getTasks(groupId) {
     return http.get(apiEndPoint, { params: { groupId } });
 }
 
-export function getTask(taskId) {
-    return http.get(taskUrl(taskId), { params: { taskId } });
+export function getTask(taskId, groupId) {
+    return http.get(taskUrl(taskId), { params: { groupId } });
 }
 
 
-export function postTask({ title, description, dueTime, completed, groupId, taskId = null }) {
+export function postTask(groupId, task) {
 
-    if (taskId !== null) {
-        return updateTask({ title, description, dueTime, completed, taskId });
-    }
-    return http.post(apiEndPoint, { title, description, dueTime, completed }, { params: { groupId } });
+    return http.post(apiEndPoint, task, { params: { groupId } });
 }
 
 export function deleteTask(id) {
     return http.delete(taskUrl(id));
 }
 
-export function updateTask({ title, description, dueTime, completed, taskId }) {
-    return http.put(taskUrl(taskId), { title, description, dueTime, completed });
+export function updateTask(taskId, groupId, task) {
+    return http.put(taskUrl(taskId), task, { params: { groupId } });
 }

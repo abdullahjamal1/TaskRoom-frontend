@@ -132,12 +132,16 @@ class Groups extends Component {
         <small>
           Dont see your teams group ? Contact your team admin to send invite
         </small>
-        <GroupCard
-          groups={data}
-          user={user}
-          onDelete={this.handleGroupDelete}
-          onLeave={this.handleLeave}
-        />
+        <Grid container direction="row" spacing={2}>
+            {groups.map((group) => (
+                <GroupCard
+                  group={group}
+                  user={user}
+                  onDelete={this.handleGroupDelete}
+                  onLeave={this.handleLeave}
+                />
+            ))}
+        </Grid>
         <div className="row">
           <Pagination
             itemsCount={totalCount}

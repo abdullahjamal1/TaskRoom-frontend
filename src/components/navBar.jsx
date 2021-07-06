@@ -5,36 +5,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
-import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Link from "@material-ui/core/Link";
 import LoginContext from "../contexts/loginContext";
+import CustomDrawer from "./drawer";
 
-
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Avatar from "@material-ui/core/Avatar";
-import ImageIcon from "@material-ui/icons/Image";
-import CloseIcon from '@material-ui/icons/Close';
-import Grid from "@material-ui/core/Grid";
-import Container from "@material-ui/core/Container";
-
-import PersonIcon from "@material-ui/icons/Person";
-import EmailIcon from "@material-ui/icons/Email";
-import EditIcon from "@material-ui/icons/Edit";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Fab from '@material-ui/core/Fab';
-import LockIcon from '@material-ui/icons/Lock';
-import SaveIcon from '@material-ui/icons/Save';
 import ProfileDialog from './profile/profileDialog';
 
 const useStyles = makeStyles((theme) => ({
@@ -90,20 +67,13 @@ const NavBar = ({ user, toggleSidebar }) => {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title} >
-          <Link href="/groups" color="inherit">
-            <i class="fa fa-thumb-tack" aria-hidden="true" ></i> TaskRoom
-          </Link>
+            <CustomDrawer />
+          <Typography variant="h6" className={classes.title}>
+            <Link href="/groups" color="inherit">
+              <i class="fa fa-thumb-tack" aria-hidden="true"></i> TaskRoom
+            </Link>
           </Typography>
-          {isLogged &&
+          {isLogged && (
             <div>
               <IconButton
                 aria-label="account of current user"
@@ -122,14 +92,26 @@ const NavBar = ({ user, toggleSidebar }) => {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleProfileOpen}>Profile</MenuItem>
-                <MenuItem onClick={() => document.location.href = "/logout"} >Logout</MenuItem>
+                <MenuItem onClick={() => (document.location.href = "/logout")}>
+                  Logout
+                </MenuItem>
               </Menu>
-              <ProfileDialog open={profileOpen} handleClose={handleProfileClose}  />
+              <ProfileDialog
+                open={profileOpen}
+                handleClose={handleProfileClose}
+              />
             </div>
-          }
-          {!isLogged &&
-          <Button onClick={loginModal.onHandleShow} variant="contained" size="small" color="secondary">Login</Button>
-          }
+          )}
+          {!isLogged && (
+            <Button
+              onClick={loginModal.onHandleShow}
+              variant="contained"
+              size="small"
+              color="secondary"
+            >
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>
