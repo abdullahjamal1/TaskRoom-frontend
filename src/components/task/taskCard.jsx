@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
     width: theme.spacing(3),
     height: theme.spacing(3),
+    marginRight: 5,
   },
 }));
 
@@ -94,6 +95,7 @@ export default function TaskCard({ task }) {
                         alt={task.author.name}
                         aria-label="recipe"
                         className={classes.avatar}
+                        src={task.author.avatar_url}
                       />
                     </Grid>
                     <Grid item>

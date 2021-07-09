@@ -25,7 +25,7 @@ export default function Messages({ messages, user }) {
   const classes = useStyles();
 
   return (
-    <Grid container direction="column" spacing={2}>
+    <Grid container direction="column" spacing={2} style={{ minHeight: 300 }}>
       {messages.map((message) => (
         <Grid
           item

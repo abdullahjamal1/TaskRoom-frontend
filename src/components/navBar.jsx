@@ -8,11 +8,12 @@ import Button from "@material-ui/core/Button";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import Link from "@material-ui/core/Link";
 import LoginContext from "../contexts/loginContext";
 import CustomDrawer from "./drawer";
+import Avatar from "@material-ui/core/Avatar";
 
 import ProfileDialog from './profile/profileDialog';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +41,7 @@ const NavBar = ({ user, toggleSidebar }) => {
 
   const loginModal = useContext(LoginContext);
   const classes = useStyles();
+  const history = useHistory();
   
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -67,11 +69,9 @@ const NavBar = ({ user, toggleSidebar }) => {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar>
-            <CustomDrawer />
-          <Typography variant="h6" className={classes.title}>
-            <Link href="/groups" color="inherit">
+          <CustomDrawer />
+          <Typography variant="h6" className={classes.title} onClick={() => history.push("/groups")}>
               <i class="fa fa-thumb-tack" aria-hidden="true"></i> TaskRoom
-            </Link>
           </Typography>
           {isLogged && (
             <div>
@@ -82,7 +82,8 @@ const NavBar = ({ user, toggleSidebar }) => {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                {!user.avatar && <AccountCircle />}
+                {user.avatar && <Avatar src={user.avatar} />}
               </IconButton>
               <Menu
                 id="menu-appbar"

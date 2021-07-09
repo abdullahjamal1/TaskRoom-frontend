@@ -10,7 +10,6 @@ import { blue } from "@material-ui/core/colors";
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: "6px 8px",
-
   },
   secondaryTail: {
     backgroundColor: theme.palette.secondary.main,
@@ -48,7 +47,9 @@ export default function CommentContainer({ taskId, groupId, user }) {
     <Paper elevation={1} className={classes.paper}>
       <Container>
         <Grid item container direction="column" spacing={2}>
-          <Grid item container direction="row" justify="center">Discussions</Grid>
+          <Grid item container direction="row" justify="center">
+            Discussions
+          </Grid>
           <Divider />
           <Grid item>
             <Messages messages={comments} user={user} />

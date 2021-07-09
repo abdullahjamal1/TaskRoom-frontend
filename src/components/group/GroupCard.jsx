@@ -78,6 +78,7 @@ export default function GroupCard({ group, user, onDelete, onLeave }) {
                     alt={group.admin.name}
                     aria-label="recipe"
                     className={classes.avatar}
+                    src={group.admin.avatar_url}
                   />
                 </Grid>{" "}
                 <Grid item xs={10}>

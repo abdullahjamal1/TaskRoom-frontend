@@ -160,79 +160,82 @@ export default function GroupCard({ group, user }) {
   };
 
   return (
-      <Card className={classes.root}>
-        <CardHeader
-          // avatar={
-          // <Avatar aria-label="recipe" className={classes.avatar}>
-          //   R
-          // </Avatar>
-          // }
-          style={{ fontSize: 10 }}
-          action={
-            <IconButton
-              aria-label="settings"
-              aria-haspopup="true"
-              onClick={handleMenu}
-            >
-              <MoreVertIcon />
-            </IconButton>
-          }
-          // titleTypographyProps={{ variant: "h6" }}
-          title={group.title}
-          subheader={
-            <Grid container alignItems="center">
-              <Grid item >
-                {" "}
-                <Avatar
-                  alt={group.admin.name}
-                  aria-label="recipe"
-                  className={classes.avatar}
-                  style={{marginRight: 5}}
-                />
-              </Grid>{" "}
-                <Grid item><div>{group.admin.name}</div></Grid>
+    <Card className={classes.root}>
+      <CardHeader
+        // avatar={
+        // <Avatar aria-label="recipe" className={classes.avatar}>
+        //   R
+        // </Avatar>
+        // }
+        style={{ fontSize: 10 }}
+        action={
+          <IconButton
+            aria-label="settings"
+            aria-haspopup="true"
+            onClick={handleMenu}
+          >
+            <MoreVertIcon />
+          </IconButton>
+        }
+        // titleTypographyProps={{ variant: "h6" }}
+        title={group.title}
+        subheader={
+          <Grid container alignItems="center">
+            <Grid item>
+              {" "}
+              <Avatar
+                alt={group.admin.name}
+                aria-label="recipe"
+                // className={classes.avatar}
+                style={{ marginRight: 5 }}
+                src={group.admin.avatar_url}
+              />
+            </Grid>{" "}
+            <Grid item>
+              <div>{group.admin.name}</div>
             </Grid>
-          }
-        />
+          </Grid>
+        }
+      />
 
-        {/* <CardMedia
+      {/* <CardMedia
         className={classes.media}
         image="/static/images/cards/paella.jpg"
         title="Paella dish"
       /> */}
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {group.description}
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
-          </IconButton>
-          <MembersDialog members={group.members} />
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
+          {group.description}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites">
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="share">
+          <ShareIcon />
+        </IconButton>
+        <MembersDialog members={group.members} />
 
-          <Menu
-            id="settings"
-            anchorEl={anchor}
-            open={open}
-            keepMounted
-            onClose={handleClose}
-          >
-            {user._id === group.admin._id && (
-              <>
-                <MenuItem onClick={handleClose}>
-                  <Link to={`groupForm/${group._id}`}>Update</Link>
-                </MenuItem>
-                <MenuItem onClick={() => handleDelete(group._id)}>
-                  Delete
-                </MenuItem>
-              </>
-            )}
-          </Menu>
-        </CardActions>
-      </Card>
+        <Menu
+          id="settings"
+          anchorEl={anchor}
+          open={open}
+          keepMounted
+          onClose={handleClose}
+        >
+          {user._id === group.admin._id && (
+            <>
+              <MenuItem onClick={handleClose}>
+                <Link to={`groupForm/${group._id}`}>Update</Link>
+              </MenuItem>
+              <MenuItem onClick={() => handleDelete(group._id)}>
+                Delete
+              </MenuItem>
+            </>
+          )}
+        </Menu>
+      </CardActions>
+    </Card>
   );
 }

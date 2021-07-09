@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -6,6 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import GroupView from "./groupView";
 import WorkFlow from "../task/workflow";
 import Box from "@material-ui/core/Box";
+import { getGroup } from "../../services/groupService";
+import LoadingScreen from "../loadingScreen";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -113,13 +115,30 @@ const useStyles = makeStyles((theme) => ({
 export default function CustomizedTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState("one");
+  const [group, setGroup] = useState(null);
+
+  const loadData = async () => {
+    const groupId = props.match.params.id;
+
+    const { data: group } = await getGroup(groupId);
+    setGroup(group);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  if (!group) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className={classes.root}>
+      <h5>{group.title}</h5>
       <div className={classes.demo1}>
         <AntTabs value={value} onChange={handleChange} aria-label="ant example">
           <AntTab label="Project" value="one" />
@@ -127,7 +146,7 @@ export default function CustomizedTabs(props) {
           <AntTab label="Files" value="three" />
         </AntTabs>
         <TabPanel value={value} index="one">
-          <GroupView props={props} />
+          <GroupView props={props} group={group} />
         </TabPanel>
         <TabPanel value={value} index="two">
           <WorkFlow props={props} />

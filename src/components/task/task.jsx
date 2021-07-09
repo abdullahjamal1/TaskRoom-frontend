@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import { Grid } from "@material-ui/core";
-import { Container, Button, Paper } from "@material-ui/core";
+import { Container, Button, Paper, Link } from "@material-ui/core";
 import { Timeline } from "@material-ui/lab";
-import { useState } from "react";
-import { getTask, updateTask } from "../../services/taskService";
+import { getTask, updateTask, uploadFile, deleteFile } from "../../services/taskService";
 import CustomizedTimeline from "./timeline";
 import TaskCardDetailed from "./taskCardDetailed";
 import LoadingScreen from "../loadingScreen";
@@ -31,25 +30,27 @@ import GridListTile from "@material-ui/core/GridListTile";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import moment from "moment";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+
+import Input from "@material-ui/core/Input";
+import { MenuItem } from "@material-ui/core";
+import Menu from "@material-ui/core/Menu";
 
 export default function Task(props) {
   const { groupId, taskId } = props.match.params;
 
   const [task, setTask] = useState(null);
-  const [comment, setComments] = useState(null);
 
   const fetchTask = async () => {
     const { data: task } = await getTask(taskId, groupId);
     setTask(task);
   };
-  const fetchComments = async () => {};
 
   useEffect(() => {
     fetchTask();
-    fetchComments();
   }, []);
 
-  const onPost = (newTask) => {
+  const handlePost = (newTask) => {
     setTask(newTask);
   };
 
@@ -81,7 +82,11 @@ export default function Task(props) {
       >
         <Grid item container direction="column" xs={12} sm={7} spacing={1}>
           <Grid item>
-            <TaskCardDetailed task={task} onStatusChange={handleStatusChange} />
+            <TaskCardDetailed
+              task={task}
+              onStatusChange={handleStatusChange}
+              onPost={handlePost}
+            />
           </Grid>
           <Grid item>
             <CommentContainer
@@ -94,7 +99,7 @@ export default function Task(props) {
         </Grid>
         <Grid item container direction="column" xs={12} sm={5}>
           <Grid item container>
-            <Files />
+            <Files taskFiles={task.files} props={props} />
           </Grid>
           <Grid item container>
             <CustomizedTimeline timeline={task.timeline} />
@@ -109,152 +114,147 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexWrap: "wrap",
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
     overflow: "hidden",
     backgroundColor: theme.palette.background.paper,
   },
   paper: {
     padding: "6px 8px",
     margin: theme.spacing(1),
+    width: 400
   },
   gridList: {
-    height: 250,
+    height: 200,
   },
 }));
 
-const files = [
-  {
-    _id: "1",
-    name: "picture",
-    owner: { name: "Abdullah" },
-    uploadDate: "July 5, 2021 1:22 PM",
-    size: "11",
-  },
-  {
-    _id: "2",
-    name: "logFile",
-    owner: { name: "Abdullah" },
-    uploadDate: "July 5, 2021 1:22 PM",
-    size: "11",
-  },
-  {
-    _id: "1",
-    name: "picture",
-    owner: { name: "Abdullah" },
-    uploadDate: "July 5, 2021 1:22 PM",
-    size: "11",
-  },
-  {
-    _id: "2",
-    name: "logFile",
-    owner: { name: "Abdullah" },
-    uploadDate: "July 5, 2021 1:22 PM",
-    size: "11",
-  },
-  {
-    _id: "1",
-    name: "picture",
-    owner: { name: "Abdullah" },
-    uploadDate: "2020-12-12T11:10:11:000Z",
-    size: "11",
-  },
-  {
-    _id: "2",
-    name: "logFile",
-    owner: { name: "Abdullah" },
-    uploadDate: "2020-12-12T11:10:11:000Z",
-    size: "11",
-  },
-  {
-    _id: "1",
-    name: "picture",
-    owner: { name: "Abdullah" },
-    uploadDate: "2020-12-12T11:10:11:000Z",
-    size: "11",
-  },
-  {
-    _id: "2",
-    name: "logFile",
-    owner: { name: "Abdullah" },
-    uploadDate: "2020-12-12T11:10:11:000Z",
-    size: "11",
-  },
-  {
-    _id: "1",
-    name: "picture",
-    owner: { name: "Abdullah" },
-    uploadDate: "2020-12-12T11:10:11:000Z",
-    size: "11",
-  },
-  {
-    _id: "2",
-    name: "logFile",
-    owner: { name: "Abdullah" },
-    uploadDate: "2020-12-12T11:10:11:000Z",
-    size: "11",
-  },
-];
+function Files({ taskFiles, props }) {
 
-function Files()  {
+  const {taskId, groupId} = props.match.params;
   const classes = useStyles();
+  let [files, setFiles] = useState(taskFiles);
+  let uploadRef = useRef(null);
+
+  const handleFileUpload = async(file) =>{
+
+    const formData = new FormData();
+    formData.append('file', file);
+    const {data: newFile} = await uploadFile(taskId, groupId, formData);
+    files = [...files, newFile];
+    setFiles(files);
+  }
+
+  const handleDelete = async(fileId) => {
+
+      await deleteFile(fileId, taskId, groupId);
+      const newFiles = files.filter((file) => file._id !== fileId);
+      setFiles(newFiles);
+  }
+
   return (
-    <Paper elevation={1} className={classes.paper}>
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid item secondary={"Secondary text"}>
-          <FolderIcon fontSize="small" />
-          {" Files"}
+    <Paper elevation={1} className={classes.paper} maxWidth>
+      <Grid container direction="column" alignItems="center">
+        <Grid
+          item
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+          xs={12}
+        >
+          <Grid item secondary={"Secondary text"}>
+            <FolderIcon fontSize="small" />
+            {" Files"}
+          </Grid>
+          <Grid item secondary={"Secondary text"}>
+            <Input
+              style={{ display: "none" }}
+              type="file"
+              inputRef={uploadRef}
+              onChange={(e) => handleFileUpload(e.target.files[0])}
+            />
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<CloudUploadIcon />}
+              onClick={() => uploadRef.current.click()}
+            >
+              Upload
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item secondary={"Secondary text"}>
-          <Button
-            variant="contained"
-            size="small"
-            startIcon={<CloudUploadIcon />}
-          >
-            Upload
-          </Button>
+          <hr />
+        <Grid item>
+          {/* <div //className={classes.root}
+          > */}
+            <GridList cellHeight={67} className={classes.gridList} cols={3}>
+              {
+                files.map((file) => (
+                  <GridListTile cols={3}>
+                    <File file={file} key={file._id} onDelete={handleDelete} />
+                  </GridListTile>
+                ))}
+            </GridList>
+          {/* </div> */}
         </Grid>
       </Grid>
-      <hr />
-      <div className={classes.root}>
-        <GridList cellHeight={67} className={classes.gridList} cols={3}>
-          {files.map((file, index) => (
-            <GridListTile key={file._id} cols={3}>
-              <ListItem key={index}>
-                <ListItemAvatar>
-                  <Avatar>
-                    <FolderIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={file.name}
-                  secondary={
-                    <Grid container direction="row" alignItems="center">
-                      <small>{file.owner.name}</small>
-                      <FiberManualRecordIcon style={{ fontSize: 5, margin: 2 }} />
-                      <small>
-                        uploaded {moment(file.uploadDate).fromNow()}
-                      </small>
-                      <FiberManualRecordIcon style={{ fontSize: 5, margin: 2 }} />
-                      <small>{file.size} MB</small>
-                    </Grid>
-                  }
-                />
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-              //{" "}
-            </GridListTile>
-          ))}
-        </GridList>
-      </div>
     </Paper>
+  );
+}
+
+function File({ file, onDelete }) {
+
+  const [anchor, setAnchor] = React.useState(null);
+  const menuOpen = Boolean(anchor);
+
+  const handleMenu = (event) => {
+    setAnchor(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchor(null);
+  };
+  return (
+    <ListItem key={file._id}>
+      <ListItemAvatar>
+        <Avatar>
+          <FolderIcon />
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={<a href={file.location}>{file.name}</a>}
+        secondary={
+          <Grid container direction="row" alignItems="center">
+            <small>{file.owner.name}</small>
+            <FiberManualRecordIcon style={{ fontSize: 5, margin: 2 }} />
+            <small>uploaded {moment(file.uploadDate).fromNow()}</small>
+            <FiberManualRecordIcon style={{ fontSize: 5, margin: 2 }} />
+            {/* <small>{file.size} MB</small> */}
+          </Grid>
+        }
+      />
+      <ListItemSecondaryAction>
+        <IconButton
+          aria-label="settings"
+          aria-haspopup="true"
+          onClick={handleMenu}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="settings"
+          anchorEl={anchor}
+          open={menuOpen}
+          keepMounted
+          onClose={handleClose}
+        >
+          <MenuItem>View</MenuItem>
+          <MenuItem onClick={() => onDelete(file._id)}>
+            Delete
+            <DeleteIcon />
+          </MenuItem>
+        </Menu>
+      </ListItemSecondaryAction>
+    </ListItem>
   );
 }

@@ -14,6 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ArchiveIcon from "@material-ui/icons/Archive";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   list: {
@@ -29,6 +30,7 @@ export default function CustomDrawer() {
   const [state, setState] = React.useState({
     top: false,
   });
+  const history = useHistory();
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -53,7 +55,7 @@ export default function CustomDrawer() {
     >
       <List>
         {["Projects"].map((text, index) => (
-          <ListItem button key={text}>
+          <ListItem button key={text} onClick={() => history.push("/groups")}>
             <ListItemIcon>{index === 0 && <MenuIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
