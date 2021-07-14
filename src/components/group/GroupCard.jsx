@@ -19,6 +19,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Grid from "@material-ui/core/Grid";
 import { Link } from "react-router-dom";
+import GroupIcon from "@material-ui/icons/Group";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,9 +101,22 @@ export default function GroupCard({ group, user, onDelete, onLeave }) {
         </Typography>
       </CardContent> */}
           <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
+            <Grid
+              item
+              container
+              direction="row"
+              alignItems="center"
+              justify="space-between"
+            >
+              <Grid item>
+                <IconButton aria-label="add to favorites">
+                  <FavoriteIcon />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <GroupIcon /> <small>{group.members.length}</small>
+              </Grid>
+            </Grid>
             <Menu
               id="settings"
               anchorEl={anchor}

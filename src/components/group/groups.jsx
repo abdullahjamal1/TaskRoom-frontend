@@ -26,7 +26,6 @@ class Groups extends Component {
     currentPage: 1,
     pageSize: 6,
     searchQuery: "",
-    isLoading: true,
   };
 
   getPageData = () => {
@@ -51,7 +50,6 @@ class Groups extends Component {
 
   async componentDidMount() {
     // get user
-    this.setState({ isLoading: true });
 
     const { data: groups } = await getGroups();
 
@@ -113,7 +111,7 @@ class Groups extends Component {
     const { user } = this.props;
     const { totalCount, data } = this.getPageData();
 
-    if (this.state.isLoading && !groups) {
+    if (!groups) {
       return <LoadingScreen />;
     }
 
@@ -127,7 +125,7 @@ class Groups extends Component {
             >
               <Fab
                 color="primary"
-                fontSize="small"
+                size="small"
                 style={{ marginTop: 10 }}
                 aria-label="add"
               >
@@ -141,19 +139,20 @@ class Groups extends Component {
           <Grid item xs={12}>
             {" "}
             <small>
-              Dont see your teams group ? Contact your team admin to send invite
+              Dont see your team ? Contact your team admin to send invite.
             </small>
           </Grid>
         </Grid>
         <Grid container direction="row" spacing={2}>
-          {data.map((group) => (
-            <GroupCard
-              group={group}
-              user={user}
-              onDelete={this.handleGroupDelete}
-              onLeave={this.handleLeave}
-            />
-          ))}
+          {data.length >= 0 &&
+            data.map((group) => (
+              <GroupCard
+                group={group}
+                user={user}
+                onDelete={this.handleGroupDelete}
+                onLeave={this.handleLeave}
+              />
+            ))}
         </Grid>
         <div className="row">
           <Pagination

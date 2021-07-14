@@ -162,9 +162,9 @@ function ProfileList({}) {
           </ListItem>
         </Grid>
         <Grid item>
-          <IconButton>
+          {/* <IconButton>
             <EditIcon />
-          </IconButton>
+          </IconButton> */}
         </Grid>
       </Grid>
 
@@ -180,9 +180,9 @@ function ProfileList({}) {
           </ListItem>
         </Grid>
         <Grid item>
-          <IconButton>
+          {/* <IconButton>
             <EditIcon />
-          </IconButton>
+          </IconButton> */}
         </Grid>
       </Grid>
     </List>

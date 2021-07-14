@@ -26,6 +26,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { createBrowserHistory } from "history";
 
 import MembersContext from "../../contexts/membersContext";
+import moment from "moment";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -107,7 +108,10 @@ function TaskForm({ onPost, onClose, task: taskProp }) {
     const groupId = history.location.pathname.toString().split("/")[2];
     // dueTime += ":00.000Z";
     let task = { title, description, collaborators };
-    if (dueTime) task.dueTime = dueTime;
+    if (dueTime) task.dueTime = moment(dueTime);
+
+    console.log(task.dueTime);
+
     if (tags) task.tags = tags.toString().split(",");
 
     try {

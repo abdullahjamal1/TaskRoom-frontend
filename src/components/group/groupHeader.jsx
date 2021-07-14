@@ -237,9 +237,14 @@ export default function GroupCard({ group, user }) {
           keepMounted
           onClose={handleClose}
         >
+          <MenuItem>View</MenuItem>
           {user._id === group.admin._id && (
             <>
-              <MenuItem onClick={() => history.push(`groupForm/${group._id}`)}>
+              <MenuItem
+                onClick={() => {
+                  history.push(`/groupForm/${group._id}`);
+                }}
+              >
                 Update
               </MenuItem>
               <MenuItem onClick={() => handleDelete(group._id)}>

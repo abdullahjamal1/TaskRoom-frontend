@@ -72,7 +72,7 @@ export default function TaskCard({ task }) {
             task.dueTime && (
               <>
                 <AccessTimeIcon fontSize="small" />
-                <small>{task.dueTime}</small>
+                <small>Due On {moment(task.dueTime).format("LL")}</small>
               </>
             )
           }

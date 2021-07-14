@@ -53,13 +53,18 @@ export default function FileView({ props }) {
 
   return (
     <Container>
-      Files {<Chip label={files.length} />}
+      Files
       <Grid container direction="row">
-        {files &&
-          files.map((file, index) => (
-            <Grid item xs={12} sm={4}>
-              <File file={file} key={index} />
-            </Grid>
+        {files.length >= 0 &&
+          files.map((file) => (
+            <>
+              {file.files &&
+                file.files.map((f, index) => (
+                  <Grid item xs={12} sm={4}>
+                    <File file={f} key={index} />
+                  </Grid>
+                ))}
+            </>
           ))}
       </Grid>
     </Container>

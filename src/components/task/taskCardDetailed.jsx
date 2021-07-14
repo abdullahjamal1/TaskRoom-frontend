@@ -105,7 +105,7 @@ export default function TaskCardDetailed({
             task.dueTime && (
               <>
                 <AccessTimeIcon />
-                <small>{moment(task.dueTime).format("LLLL")}</small>
+                <small>Due On {moment(task.dueTime).format("LL")}</small>
               </>
             )
           }
