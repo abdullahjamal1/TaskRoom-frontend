@@ -8,6 +8,8 @@ import WorkFlow from "../task/workflow";
 import Box from "@material-ui/core/Box";
 import { getGroup } from "../../services/groupService";
 import LoadingScreen from "../loadingScreen";
+import FileView from "../file/fileView";
+import MembersContext from "../../contexts/membersContext";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -149,10 +151,14 @@ export default function CustomizedTabs(props) {
           <GroupView props={props} group={group} />
         </TabPanel>
         <TabPanel value={value} index="two">
-          <WorkFlow props={props} />
+          <MembersContext.Provider
+            value={group.members.filter((member) => member.isVerified)}
+          >
+            <WorkFlow props={props} />
+          </MembersContext.Provider>
         </TabPanel>
         <TabPanel value={value} index="three">
-          Files
+          <FileView props={props} />
         </TabPanel>
         <Typography className={classes.padding} />
       </div>

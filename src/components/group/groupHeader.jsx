@@ -28,17 +28,20 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import PersonIcon from "@material-ui/icons/Person";
 import AddIcon from "@material-ui/icons/Add";
+import CheckIcon from "@material-ui/icons/Check";
 import { blue } from "@material-ui/core/colors";
+import { useHistory } from "react-router-dom";
 
 const emails = ["username@gmail.com", "user02@gmail.com"];
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 600,
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   media: {
     height: 0,
@@ -79,14 +82,22 @@ function SimpleDialog({ onClose, selectedValue, open, members }) {
             key={member.email}
           >
             <ListItemAvatar>
-              <Avatar alt={member.name} className={classes.members_avatar}>
+              <Avatar
+                alt={member.name}
+                src={member.avatar_url}
+                className={classes.members_avatar}
+              >
                 {/* <PersonIcon /> */}
               </Avatar>
             </ListItemAvatar>
+
             <ListItemText primary={member.name} secondary={member.email} />
+            <ListItemSecondaryAction>
+              {member.isVerified && <CheckIcon style={{ color: "green" }} />}
+            </ListItemSecondaryAction>
           </ListItem>
         ))}
-
+        {/* 
         <ListItem
           autoFocus
           button
@@ -98,7 +109,7 @@ function SimpleDialog({ onClose, selectedValue, open, members }) {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary="Add New Member" />
-        </ListItem>
+        </ListItem> */}
       </List>
     </Dialog>
   );
@@ -127,7 +138,11 @@ function MembersDialog({ members }) {
     <>
       {/* <Typography variant="subtitle1">Selected: {selectedValue}</Typography>
       <br /> */}
-      <AvatarGroup max={3} onClick={handleClickOpen}>
+      <AvatarGroup
+        max={5}
+        style={{ cursor: "pointer" }}
+        onClick={handleClickOpen}
+      >
         {members.map((member) => (
           <Avatar alt={member.name} src={member.avatar_url} />
         ))}
@@ -144,6 +159,7 @@ function MembersDialog({ members }) {
 
 export default function GroupCard({ group, user }) {
   const classes = useStyles();
+  const history = useHistory();
   const [anchor, setAnchor] = React.useState(null);
   const open = Boolean(anchor);
 
@@ -212,9 +228,6 @@ export default function GroupCard({ group, user }) {
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
         <MembersDialog members={group.members} />
 
         <Menu
@@ -226,8 +239,8 @@ export default function GroupCard({ group, user }) {
         >
           {user._id === group.admin._id && (
             <>
-              <MenuItem onClick={handleClose}>
-                <Link to={`groupForm/${group._id}`}>Update</Link>
+              <MenuItem onClick={() => history.push(`groupForm/${group._id}`)}>
+                Update
               </MenuItem>
               <MenuItem onClick={() => handleDelete(group._id)}>
                 Delete

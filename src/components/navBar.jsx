@@ -69,9 +69,13 @@ const NavBar = ({ user, toggleSidebar }) => {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <CustomDrawer />
-          <Typography variant="h6" className={classes.title} onClick={() => history.push("/groups")}>
-              <i class="fa fa-thumb-tack" aria-hidden="true"></i> TaskRoom
+          {isLogged && <CustomDrawer />}
+          <Typography
+            variant="h6"
+            className={classes.title}
+            onClick={() => history.push("/groups")}
+          >
+            <i class="fa fa-thumb-tack" aria-hidden="true"></i> TaskRoom
           </Typography>
           {isLogged && (
             <div>

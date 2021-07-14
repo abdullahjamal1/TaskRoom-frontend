@@ -14,20 +14,15 @@ export default function GroupView({ props, group }) {
 
   return (
     <Container>
-      <Grid container direction="column" spacing={2}>
-        <Grid
-          item
-          container
-          direction="row"
-          spacing={2}
-          style={{ marginTop: 20 }}
-        >
-          <Grid item xs={12} sm={8}>
-            <GroupHeader user={user} group={group} />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            project status
-          </Grid>
+      <Grid
+        item
+        container
+        direction="row"
+        spacing={2}
+        style={{ marginTop: 20 }}
+      >
+        <Grid item xs={12}>
+          <GroupHeader user={user} group={group} />
         </Grid>
       </Grid>
     </Container>

@@ -14,6 +14,10 @@ export function getGroup(groupId) {
     return http.get(groupUrl(groupId));
 }
 
+export function getAllFiles(groupId) {
+    return http.get('/files', { params: { groupId } });
+}
+
 export function leaveGroup(groupId){
     return http.get(`${groupUrl(groupId)}/leave`);
 }

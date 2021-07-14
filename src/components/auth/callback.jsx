@@ -7,7 +7,6 @@ export default function OauthCallBack(props) {
   useEffect(() => {
     async function getCurrentHeaders() {
       const params = queryString.parse(props.location.search);
-      console.log(params.token);
       loginWithJwt(params.token);
       document.location = "/";
     }

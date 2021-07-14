@@ -103,9 +103,6 @@ export default function GroupCard({ group, user, onDelete, onLeave }) {
             <IconButton aria-label="add to favorites">
               <FavoriteIcon />
             </IconButton>
-            <IconButton aria-label="share">
-              <ShareIcon />
-            </IconButton>
             <Menu
               id="settings"
               anchorEl={anchor}
@@ -126,9 +123,9 @@ export default function GroupCard({ group, user, onDelete, onLeave }) {
                   </MenuItem>
                 </>
               )}
-              {user._id !== group.admin._id && (
+              {/* {user._id !== group.admin._id && (
                 <MenuItem onClick={() => onLeave(group._id)}>Unenroll</MenuItem>
-              )}
+              )} */}
             </Menu>
           </CardActions>
         </Card>

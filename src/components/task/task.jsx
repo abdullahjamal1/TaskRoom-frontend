@@ -31,10 +31,9 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import moment from "moment";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-
-import Input from "@material-ui/core/Input";
 import { MenuItem } from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
+import Input from "@material-ui/core/Input";
 
 export default function Task(props) {
   const { groupId, taskId } = props.match.params;
@@ -55,11 +54,23 @@ export default function Task(props) {
   };
 
   const handleStatusChange = async (action) => {
-    const { title, description, dueTime, status } = task;
+    let { title, description, dueTime, status, tags, collaborators } = task;
     let updatedTask;
 
-    if (!dueTime) updatedTask = { title, description, status, action };
-    else updatedTask = { title, description, status, dueTime, action };
+    collaborators = collaborators.map((c) => c.email);
+
+    if (!dueTime)
+      updatedTask = { title, description, status, action, tags, collaborators };
+    else
+      updatedTask = {
+        title,
+        description,
+        status,
+        dueTime,
+        action,
+        tags,
+        collaborators,
+      };
 
     const { data: newTask } = await updateTask(
       task._id,

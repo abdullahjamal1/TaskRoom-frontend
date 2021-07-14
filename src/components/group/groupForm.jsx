@@ -7,11 +7,16 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip";
 import FaceIcon from "@material-ui/icons/Face";
+import MuiAlert from "@material-ui/lab/Alert";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 class groupForm extends Form {
   state = {
     data: {},
-    members: [],
+    members: "",
     themes: [
       "Primary",
       "Secondary",
@@ -23,7 +28,7 @@ class groupForm extends Form {
       "Dark",
     ],
     errors: {},
-    email: "",
+    error: "",
   };
 
   schema = {
@@ -58,52 +63,45 @@ class groupForm extends Form {
     const { title, description, theme } = this.state.data;
     let { members } = this.state;
 
-    if (this.props.match.params.id === "new") {
-      await saveGroup(title, description, theme, members);
-    } else {
-      await updateGroup(
-        title,
-        description,
-        theme,
-        members,
-        this.props.match.params.id
-      );
+    if (members) {
+      members = members
+        .toString()
+        .split(",")
+        .map((emails) => emails.trim());
+    } else members = [];
+
+    console.log(members);
+
+    try {
+      if (this.props.match.params.id === "new") {
+        await saveGroup(title, description, theme, members);
+      } else {
+        await updateGroup(
+          title,
+          description,
+          theme,
+          members,
+          this.props.match.params.id
+        );
+      }
+      this.props.history.replace("/groups");
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        this.setState({ error: ex.response.data });
+      }
     }
-    this.props.history.replace("/groups");
   };
 
   handleUserDelete = (user) => {
-    console.log("deleted");
-    console.log(this.state.members);
     const members = this.state.members.filter((member) => member !== user);
-    console.log(members);
+
     this.setState({ members });
   };
 
-  handleUserEmail = (event) => {
-    if (event.key === "Enter") {
-      const members = [...this.state.members, this.state.email];
-      const email = "";
-      this.setState({ members, email });
-    }
-  };
-
-  handleEmailChange = (event) => {
-    // console.log(event.target.value.last);
-    const { email } = this.state;
-    if (event.target.value[email.length] === " ") {
-      const members = [...this.state.members, this.state.email];
-      const email = "";
-      this.setState({ members, email });
-    }
-    // if (event.target.value[email.length] !== "Enter" && event.key !== "Enter")
-    else this.setState({ email: event.target.value });
-  };
-
   render() {
-    const { themes, members } = this.state;
+    const { themes, members, error } = this.state;
     return (
-      <Container >
+      <Container>
         <Grid container direction="column" justify="space-around">
           <form onSubmit={this.handleSubmit}>
             <Grid item xs={12}>
@@ -120,18 +118,21 @@ class groupForm extends Form {
               <TextField
                 id="standard-textarea"
                 label="Member Emails"
-                placeholder="space separated emails"
+                placeholder="comma(,) separated emails of members"
                 multiline
-                value={this.state.email}
-                onChange={this.handleEmailChange}
+                value={members}
+                onChange={(event) =>
+                  this.setState({ members: event.target.value })
+                }
                 fullWidth={true}
                 margin="normal"
                 // onKeyDown={this.handleUserEmail}
               />
             </Grid>
-            <Grid item container direction="row">
+            <Grid item>{error && <Alert severity="error">{error}</Alert>}</Grid>
+            {/* <Grid item container direction="row">
               <ChipList members={members} onDelete={this.handleUserDelete} />
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12}>
               {this.renderButton(" Submit ")}
@@ -143,16 +144,5 @@ class groupForm extends Form {
   }
 }
 
-function ChipList({ members, onDelete }) {
-  return members.map((member) => (
-    <Grid item sm={2} xs={12}>
-      <Chip
-        icon={<FaceIcon />}
-        label={member}
-        onDelete={() => onDelete(member)}
-      />
-    </Grid>
-  ));
-}
 
 export default groupForm;

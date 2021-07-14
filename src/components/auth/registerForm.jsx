@@ -27,7 +27,6 @@ class RegisterForm extends Form {
   };
 
   doSubmit = async () => {
-    console.log(this.state.data);
     try {
       const { data: responseMessage } = await userService.register(
         this.state.data

@@ -8,6 +8,6 @@ export function getComments({ taskId, groupId, parentId = -1 }) {
 }
 
 export function postComment({ message, taskId, parentId, groupId }) {
-    console.log(message);
+
     return http.post(apiEndPoint, { message }, { params: { parentId, taskId, groupId } });
 }

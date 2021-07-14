@@ -15,8 +15,10 @@ import GroupCard from "./GroupCard";
 import authService from "../../services/authService";
 import LoadingScreen from "../loadingScreen";
 
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 
 class Groups extends Component {
   state = {
@@ -52,7 +54,7 @@ class Groups extends Component {
     this.setState({ isLoading: true });
 
     const { data: groups } = await getGroups();
-    console.log(groups);
+
     this.setState({ groups });
   }
 
@@ -95,10 +97,10 @@ class Groups extends Component {
   handleGroupDelete = async (groupId) => {
     try {
       const res = await deleteGroup(groupId);
-      if(res.status === 200){
+      if (res.status === 200) {
         let groups = [...this.state.groups];
         groups = groups.filter((group) => group._id !== groupId);
-        this.setState({groups});
+        this.setState({ groups });
       }
     } catch (ex) {
       if (ex.response && ex.response.status === 404) toast.error(ex);
@@ -117,30 +119,41 @@ class Groups extends Component {
 
     return (
       <Container>
-        <div className="row m-1">
-          <Link
-            to="/groupForm/new"
-            className="btn btn-info"
-            style={{ marginBottom: 20 }}
-          >
-            +
-          </Link>
-        </div>
-        <div className="row">
-          <SearchBox value={searchQuery} onChange={this.handleSearch} />
-        </div>
-        <small>
-          Dont see your teams group ? Contact your team admin to send invite
-        </small>
+        <Grid container direction="row" spacing={2} style={{ marginTop: 20 }}>
+          <Grid item xs={3} sm={1}>
+            <Link
+              to="/groupForm/new"
+              style={{ marginTop: 40, marginRight: 10 }}
+            >
+              <Fab
+                color="primary"
+                fontSize="small"
+                style={{ marginTop: 10 }}
+                aria-label="add"
+              >
+                <AddIcon />
+              </Fab>
+            </Link>
+          </Grid>
+          <Grid item xs={9} sm={11}>
+            <SearchBox value={searchQuery} onChange={this.handleSearch} />
+          </Grid>
+          <Grid item xs={12}>
+            {" "}
+            <small>
+              Dont see your teams group ? Contact your team admin to send invite
+            </small>
+          </Grid>
+        </Grid>
         <Grid container direction="row" spacing={2}>
-            {groups.map((group) => (
-                <GroupCard
-                  group={group}
-                  user={user}
-                  onDelete={this.handleGroupDelete}
-                  onLeave={this.handleLeave}
-                />
-            ))}
+          {data.map((group) => (
+            <GroupCard
+              group={group}
+              user={user}
+              onDelete={this.handleGroupDelete}
+              onLeave={this.handleLeave}
+            />
+          ))}
         </Grid>
         <div className="row">
           <Pagination

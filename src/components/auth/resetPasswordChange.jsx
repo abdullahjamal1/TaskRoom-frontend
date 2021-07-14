@@ -35,7 +35,6 @@ class ResetPasswordChange extends Form {
         this.state.data.password,
         params.token
       );
-      console.log(response);
       if (response.status === 200) {
         authService.loginWithJwt(response.data);
         window.location = "/groups";

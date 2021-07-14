@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TaskCard({ task }) {
   const classes = useStyles();
 
-  if(!task) return <div></div>;
+  if (!task) return <div></div>;
 
   return (
     <Link
@@ -61,6 +61,7 @@ export default function TaskCard({ task }) {
         className={classes.root}
         elevation={5}
         style={{ backgroundColor: task.color }}
+        Draggable={true}
       >
         <CardHeader
           // action={
@@ -133,8 +134,9 @@ export default function TaskCard({ task }) {
 function Tags({ tags }) {
   return (
     <Grid item container>
-      {  tags.map((tag) => (
-          <Grid item style={{margin: 5}}>
+      {tags &&
+        tags.map((tag) => (
+          <Grid item style={{ margin: 5 }}>
             <Chip label={<small>{tag}</small>} color="primary" size="small" />
           </Grid>
         ))}

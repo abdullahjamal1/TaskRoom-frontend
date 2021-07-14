@@ -10,7 +10,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
+import { blue } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -28,6 +28,7 @@ import Chip from "@material-ui/core/Chip";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import moment from "moment";
 import SaveIcon from "@material-ui/icons/Save";
+import MembersContext from "../../contexts/membersContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "56.25%", // 16:9
   },
   avatar: {
-    backgroundColor: red[500],
+    backgroundColor: blue[500],
     width: theme.spacing(4),
     height: theme.spacing(4),
   },
@@ -77,12 +78,14 @@ export default function TaskCardDetailed({
 
   return (
     <>
-      <TaskFormDialog
-        open={formOpen}
-        onClose={handleClose}
-        onPost={onPost}
-        task={task}
-      />
+      <MembersContext.Provider value={task.collaborators}>
+        <TaskFormDialog
+          open={formOpen}
+          onClose={handleClose}
+          onPost={onPost}
+          task={task}
+        />
+      </MembersContext.Provider>
       <Card
         className={classes.root}
         elevation={1}
@@ -121,6 +124,19 @@ export default function TaskCardDetailed({
             <Grid container direction="column" spacing={2}>
               <Grid item>
                 <Tags tags={task.tags} />
+              </Grid>
+              <Grid item>
+                {task.collaborators && <strong>Collaborators</strong>}
+              </Grid>
+              <Grid item container direction="row" spacing={1}>
+                {task.collaborators.map((c) => (
+                  <Grid item style={{ marginRight: 5 }}>
+                    <Avatar src={c.avatar_url} className={classes.avatar}>
+                      {c.name[0]}
+                    </Avatar>
+                  </Grid>
+                ))}
+                <hr />
               </Grid>
               <Grid item>
                 <p>{task.description}</p>
@@ -189,11 +205,12 @@ export default function TaskCardDetailed({
 function Tags({ tags }) {
   return (
     <Grid item container>
-      {tags.map((tag) => (
-        <Grid item style={{ margin: 5 }}>
-          <Chip label={tag} color="primary" size="small" />
-        </Grid>
-      ))}
+      {tags &&
+        tags.map((tag) => (
+          <Grid item style={{ margin: 5 }}>
+            <Chip label={tag} color="primary" size="small" />
+          </Grid>
+        ))}
     </Grid>
   );
 }

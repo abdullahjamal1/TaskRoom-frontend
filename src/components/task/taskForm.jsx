@@ -15,15 +15,17 @@ import ImageIcon from "@material-ui/icons/Image";
 import CloseIcon from "@material-ui/icons/Close";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Checkbox from "@material-ui/core/Checkbox";
 
 import MuiAlert from "@material-ui/lab/Alert";
 import { createBrowserHistory } from "history";
 
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
+import MembersContext from "../../contexts/membersContext";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -52,27 +54,14 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     width: 270,
   },
+  checkList: {
+    maxWidth: 360,
+    backgroundColor: theme.palette.grey[50],
+    position: "relative",
+    overflow: "auto",
+    maxHeight: 200,
+  },
 }));
-
-const colors = [
-  { bg: "white", textColor: "black" },
-  { bg: "red", textColor: "white" },
-  { bg: "pink", textColor: "white" },
-  { bg: "purple", textColor: "white" },
-  // {bg: "deepPurple", textColor: "white"},
-  { bg: "indigo", textColor: "white" },
-  { bg: "blue", textColor: "white" },
-  // {bg: "deepOrange", textColor: "white"},
-  { bg: "lightBlue", textColor: "black" },
-  { bg: "cyan", textColor: "black" },
-  { bg: "teal", textColor: "black" },
-  { bg: "green", textColor: "black" },
-  { bg: "lightGreen", textColor: "black" },
-  { bg: "lime", textColor: "black" },
-  { bg: "yellow", textColor: "black" },
-  // {bg: "amber", textColor: "black"},
-  { bg: "orange", textColor: "black" },
-];
 
 export default function TaskFormDialog(props) {
   const classes = useStyles();
@@ -93,13 +82,15 @@ export default function TaskFormDialog(props) {
 }
 
 function TaskForm({ onPost, onClose, task: taskProp }) {
+  let context = useContext(MembersContext);
   const classes = useStyles();
   let [dueTime, setDueDate] = useState(null);
   const [title, setTitle] = useState(null);
   const [tags, setTags] = useState(null);
   const [description, setDescription] = useState(null);
-  const [color, setColor] = useState(colors[0]);
+  // const [color, setColor] = useState(colors[0]);
   const [error, setError] = useState(null);
+  const [collaborators, setCollaborators] = useState([]);
 
   useEffect(() => {
     if (taskProp) {
@@ -107,6 +98,7 @@ function TaskForm({ onPost, onClose, task: taskProp }) {
       setTitle(taskProp.title);
       setTags(taskProp.tags);
       setDescription(taskProp.description);
+      setCollaborators(taskProp.collaborators.map((c) => c.email));
     }
   }, []);
 
@@ -114,7 +106,7 @@ function TaskForm({ onPost, onClose, task: taskProp }) {
     const history = createBrowserHistory();
     const groupId = history.location.pathname.toString().split("/")[2];
     // dueTime += ":00.000Z";
-    let task = { title, description };
+    let task = { title, description, collaborators };
     if (dueTime) task.dueTime = dueTime;
     if (tags) task.tags = tags.toString().split(",");
 
@@ -189,7 +181,7 @@ function TaskForm({ onPost, onClose, task: taskProp }) {
             onChange={(event) => setTags(event.target.value)}
           />
         </Grid>
-        <Grid item>
+        {/* <Grid item>
           <FormControl
             variant="outlined"
             className={classes.textField}
@@ -221,6 +213,14 @@ function TaskForm({ onPost, onClose, task: taskProp }) {
               ))}
             </Select>
           </FormControl>
+        </Grid> */}
+        <Grid item>
+          Collaborators
+          <CheckboxListSecondary
+            members={context}
+            collaborators={collaborators}
+            setCollaborators={setCollaborators}
+          />
         </Grid>
         <Grid item>
           <TextField
@@ -251,5 +251,54 @@ function TaskForm({ onPost, onClose, task: taskProp }) {
         </Grid>
       </Grid>
     </Container>
+  );
+}
+
+function CheckboxListSecondary({
+  members,
+  collaborators: checked,
+  setCollaborators: setChecked,
+}) {
+  const classes = useStyles();
+
+  const handleToggle = (index) => () => {
+    const currentIndex = checked.indexOf(index);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(index);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+    console.log(newChecked);
+    setChecked(newChecked);
+  };
+
+  return (
+    <List dense className={classes.checkList}>
+      {members.map((member, index) => {
+        const labelId = `checkbox-list-secondary-label-${member.email}`;
+        return (
+          <ListItem key={index} button>
+            <ListItemAvatar>
+              <Avatar alt={member.name} src={member.avatar_url} />
+            </ListItemAvatar>
+            <ListItemText
+              id={labelId}
+              primary={member.name}
+              secondary={member.email}
+            />
+            <ListItemSecondaryAction>
+              <Checkbox
+                edge="end"
+                onChange={handleToggle(member.email)}
+                checked={checked.indexOf(member.email) !== -1}
+                inputProps={{ "aria-labelledby": labelId }}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+        );
+      })}
+    </List>
   );
 }
