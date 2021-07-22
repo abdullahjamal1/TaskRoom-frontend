@@ -53,7 +53,7 @@ class RegisterForm extends Form {
   render() {
     return (
       <div className="row">
-        <div className="col-8"></div>
+        <div className="col"></div>
         <form className="col" onSubmit={this.handleSubmit}>
           <h2>Register</h2>
           {this.renderInput("email", "Email")}
@@ -71,6 +71,7 @@ class RegisterForm extends Form {
           <Oauth />
           {this.renderButton("Register")}
         </form>
+        <div className="col"></div>
       </div>
     );
   }

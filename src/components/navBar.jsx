@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = ({ user, toggleSidebar }) => {
+const NavBar = ({ user }) => {
 
   const loginModal = useContext(LoginContext);
   const classes = useStyles();

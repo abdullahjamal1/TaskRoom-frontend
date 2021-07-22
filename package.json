@@ -35,6 +35,9 @@
     "react-toastify": "^4.1.0",
     "sentry": "^0.1.2",
     "web-vitals": "^0.2.4",
+    "workbox-cacheable-response": "^5.1.4",
+    "workbox-expiration": "^5.1.4",
+    "workbox-precaching": "^5.1.4",
     "workbox-routing": "^5.1.4",
     "workbox-strategies": "^5.1.4"
   },
@@ -62,5 +65,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "workbox-build": "^5.1.4"
+  }
 }

@@ -32,7 +32,7 @@ class App extends Component {
   };
 
   handleClose = () => this.setState({ show: false, modalMessage: "" });
-  handleShow = () => this.setState({ show: true });
+  handleShow = () => { this.setState({ show: true }); }
   handleModalMessage = (msg) => this.setState({ modalMessage: msg });
 
   componentDidMount() {
@@ -54,8 +54,7 @@ class App extends Component {
       }}>
         <ToastContainer />
         <LoginModal />
-        {/* <SidebarMenu showSidebar={showSidebar} /> */}
-        <NavBar user={user} toggleSidebar={this.toggleSidebar} />
+        <NavBar user={user} />
         <main className="container">
           <Switch>
             <Route path="/register" component={RegisterForm} />
@@ -74,6 +73,7 @@ class App extends Component {
             <ProtectedRoute path="/groups"
               render={props => <Groups {...props} user={this.state.user} />} />
             <Route path="/not-found" component={NotFound}></Route>
+            <Redirect exact from='/service-worker.js' to='/service-worker.js' />
             <Redirect exact from="/" to="/groups" />
             <Redirect to="/not-found" />
           </Switch>
