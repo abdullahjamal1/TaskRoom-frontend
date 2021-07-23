@@ -32,6 +32,13 @@ import Joi from "joi";
 import { updateUser, getLoggedUser } from "../../services/userService";
 import { getCurrentUser } from "../../services/authService";
 
+import Switch from "@material-ui/core/Switch";
+import { toggleNotifications } from "../../services/userService";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+
 const schema = Joi.object({
   name: Joi.string().min(3).required(),
 });
@@ -64,7 +71,21 @@ function ProfileList({}) {
   const [passwordEdit, setPasswordEdit] = React.useState(false);
 
   const [name, setName] = React.useState(null);
-  const [user, setUser] = React.useState({});
+  const [user, setUser] = React.useState(null);
+
+  // toggle isNotificationEnabled
+  const toggleChecked = async () => {
+    // send request to backend
+    const isNotificationEnabled = !user.isNotificationEnabled;
+    setUser({ ...user, isNotificationEnabled: isNotificationEnabled });
+    try {
+      await toggleNotifications(user._id, {
+        isNotificationEnabled,
+      });
+    } catch (ex) {
+      console.log("error", ex);
+    }
+  };
 
   const {
     register,
@@ -76,7 +97,6 @@ function ProfileList({}) {
 
   useEffect(() => {
     async function loadUser() {
-      const { _id } = getCurrentUser();
       const { data } = await getLoggedUser();
       setUser(data);
     }
@@ -179,12 +199,38 @@ function ProfileList({}) {
             <ListItemText primary="E-mail address" secondary={user.email} />
           </ListItem>
         </Grid>
-        <Grid item>
-          {/* <IconButton>
-            <EditIcon />
-          </IconButton> */}
+      </Grid>
+
+      <Grid item container direction="row" justify="space-between">
+        <Grid item sm={10} xs={9}>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar>
+                <NotificationsIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Email notifications" />
+          </ListItem>
+        </Grid>
+        <Grid item container alignItems="center" sm={2} xs={3}>
+          <FormGroup aria-label="position" row>
+            <FormControlLabel
+              color="primary"
+              labelPlacement="start"
+              control={
+                <Switch
+                  checked={user.isNotificationEnabled}
+                  onChange={toggleChecked}
+                  color="primary"
+                />
+              }
+            />
+          </FormGroup>
         </Grid>
       </Grid>
+      {/* <IconButton>
+            <EditIcon />
+          </IconButton> */}
     </List>
   );
 }

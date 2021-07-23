@@ -30,6 +30,10 @@ export function updateUser(id, user) {
     return http.put(userUrl(id), user);
 }
 
+export function toggleNotifications(id, isNotificationEnabled){
+    return http.put(userUrl(id), isNotificationEnabled);
+}
+
 export function getDefaultAvatar({ target }) {
     target.src = `${process.env.REACT_APP_S3_URL}default/images/user_avatar.jpg`;
 }

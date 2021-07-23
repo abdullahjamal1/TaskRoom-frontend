@@ -23,6 +23,7 @@ import "./App.css";
 import Footer from './components/footer';
 import Task from './components/task/task';
 import OauthCallback from './components/auth/callback';
+import Settings from './components/settings';
 
 class App extends Component {
   state = {
@@ -63,6 +64,10 @@ class App extends Component {
             <Route path="/reset-password" component={ResetPassword} />
             <Route path="/reset-password-change" component={ResetPasswordChange} />
             <Route path="/callback" component={OauthCallback} />
+            <ProtectedRoute
+              path="/settings"
+              component={Settings}
+            />
             <ProtectedRoute
               path="/groupForm/:id"
               component={GroupForm}

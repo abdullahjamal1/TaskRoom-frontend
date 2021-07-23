@@ -63,13 +63,20 @@ export default function CustomDrawer() {
       </List>
       <Divider />
       <List>
-        {["Project Archive", "Settings"].map((text, index) => (
-          <ListItem button key={text}>
+        {[
+          { text: "Project Archive", link: "/groups" },
+          { text: "Settings", link: "/settings" },
+        ].map((item, index) => (
+          <ListItem
+            button
+            key={item.text}
+            onClick={() => history.push(item.link)}
+          >
             <ListItemIcon>
               {index === 0 && <ArchiveIcon />}
               {index === 1 && <SettingsIcon />}
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText primary={item.text} />
           </ListItem>
         ))}
       </List>
