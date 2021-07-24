@@ -1,12 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import Form from "../common/form";
 import { saveGroup, getGroup, updateGroup } from "../../services/groupService";
 import Joi from "joi-browser";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Chip from "@material-ui/core/Chip";
-import FaceIcon from "@material-ui/icons/Face";
 import MuiAlert from "@material-ui/lab/Alert";
 
 function Alert(props) {
@@ -143,6 +141,5 @@ class groupForm extends Form {
     );
   }
 }
-
 
 export default groupForm;

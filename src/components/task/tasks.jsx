@@ -1,14 +1,5 @@
-import React, { Component, useEffect, useState } from "react";
-import { deleteTask, getTasks } from "../../services/taskService";
-import {
-  Card,
-  Col,
-  Row,
-  Dropdown,
-  ListGroup,
-  ListGroupItem,
-  Badge,
-} from "react-bootstrap";
+import React from "react";
+import { Card, Col, Row, Dropdown, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CommentContainer from "../comment/commentContainer";
 
@@ -91,7 +82,7 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
                             <Dropdown.Item>
                               <Link to={`taskForm/${task._id}`}>
                                 <i
-                                  class="fa fa-pencil-square-o"
+                                  className="fa fa-pencil-square-o"
                                   aria-hidden="true"
                                 ></i>{" "}
                                 Update
@@ -100,7 +91,10 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
 
                             <Dropdown.Item>
                               <div onClick={() => onDelete(task._id)}>
-                                <i class="fa fa-trash-o" aria-hidden="true"></i>{" "}
+                                <i
+                                  className="fa fa-trash-o"
+                                  aria-hidden="true"
+                                ></i>{" "}
                                 Delete
                               </div>
                             </Dropdown.Item>
@@ -108,7 +102,7 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
                             <Dropdown.Item>
                               <div onClick={() => onComplete(task)}>
                                 <i
-                                  class="fa fa-check-circle-o"
+                                  className="fa fa-check-circle-o"
                                   aria-hidden="true"
                                 ></i>{" "}
                                 Mark Completed
@@ -128,7 +122,7 @@ const Tasks = ({ theme, tasks, user, onDelete, onPost, status }) => {
               </Card.Subtitle>
             </Link>
             <small className="text-muted">
-              <i class="fa fa-clock-o" aria-hidden="true">
+              <i className="fa fa-clock-o" aria-hidden="true">
                 {" "}
                 Last Updated On{" "}
                 {(new Date(task.updateTime) + " ").substr(0, 21)}

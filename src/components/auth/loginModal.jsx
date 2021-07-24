@@ -1,11 +1,5 @@
-import React, { Component } from "react";
-import {
-  Modal,
-  Button,
-  ModalBody,
-  ModalFooter,
-  ModalTitle,
-} from "react-bootstrap";
+import React from "react";
+import { Modal, Button, ModalBody, ModalFooter } from "react-bootstrap";
 import Joi from "joi-browser";
 import Form from "../common/form";
 import auth from "../../services/authService";
@@ -55,7 +49,7 @@ class LoginModal extends Form {
           <Modal show={context.show} onHide={context.onHandleClose}>
             <Modal.Header closeButton>
               <Modal.Title>
-                Login <i class="fa fa-sign-in" aria-hidden="true"></i>
+                Login <i className="fa fa-sign-in" aria-hidden="true"></i>
               </Modal.Title>
             </Modal.Header>
             {context.modalMessage && (

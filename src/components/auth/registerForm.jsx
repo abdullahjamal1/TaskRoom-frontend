@@ -1,7 +1,6 @@
 import React from "react";
 import Form from "../common/form";
 import Joi from "joi-browser";
-import auth from "../../services/authService";
 import * as userService from "../../services/userService";
 import Alert from "react-bootstrap/Alert";
 import { Button } from "react-bootstrap/Button";

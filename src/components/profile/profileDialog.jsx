@@ -1,13 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Avatar from "@material-ui/core/Avatar";
 import ImageIcon from "@material-ui/icons/Image";
@@ -22,15 +20,13 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Fab from "@material-ui/core/Fab";
 import LockIcon from "@material-ui/icons/Lock";
 import SaveIcon from "@material-ui/icons/Save";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
 import { updateUser, getLoggedUser } from "../../services/userService";
-import { getCurrentUser } from "../../services/authService";
 
 import Switch from "@material-ui/core/Switch";
 import { toggleNotifications } from "../../services/userService";
@@ -68,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 function ProfileList({}) {
   const classes = useStyles();
   const [nameEdit, setNameEdit] = React.useState(false);
-  const [passwordEdit, setPasswordEdit] = React.useState(false);
+  // const [passwordEdit, setPasswordEdit] = React.useState(false);
 
   const [name, setName] = React.useState(null);
   const [user, setUser] = React.useState(null);

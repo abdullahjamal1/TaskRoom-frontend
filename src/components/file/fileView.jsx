@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { getAllFiles } from "../../services/groupService";
 import LoadingScreen from "../loadingScreen";
-
 import { makeStyles } from "@material-ui/core/styles";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
 import moment from "moment";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { MenuItem } from "@material-ui/core";
-import Menu from "@material-ui/core/Menu";
 import FolderIcon from "@material-ui/icons/Folder";
 import { Grid, Container } from "@material-ui/core";
-import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles((theme) => ({
   root: {

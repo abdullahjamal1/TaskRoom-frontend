@@ -1,19 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
@@ -51,7 +44,7 @@ export default function GroupCard({ group, user, onDelete, onLeave }) {
 
   return (
     <>
-      <Grid item key={group._id} xs={12} sm={4}>
+      <Grid key={group._id} item xs={12} sm={4}>
         <Card className={classes.root}>
           <CardHeader
             // avatar={
@@ -108,11 +101,7 @@ export default function GroupCard({ group, user, onDelete, onLeave }) {
               alignItems="center"
               justify="space-between"
             >
-              <Grid item>
-                <IconButton aria-label="add to favorites">
-                  <FavoriteIcon />
-                </IconButton>
-              </Grid>
+              <Grid item></Grid>
               <Grid item>
                 <GroupIcon /> <small>{group.members.length}</small>
               </Grid>
@@ -128,14 +117,12 @@ export default function GroupCard({ group, user, onDelete, onLeave }) {
                 <Link to={"groups/" + group._id}>View</Link>
               </MenuItem>
               {user._id === group.admin._id && (
-                <>
-                  <MenuItem onClick={handleClose}>
-                    <Link to={`groupForm/${group._id}`}>Update</Link>
-                  </MenuItem>
-                  <MenuItem onClick={() => onDelete(group._id)}>
-                    Delete
-                  </MenuItem>
-                </>
+                <MenuItem onClick={handleClose}>
+                  <Link to={`groupForm/${group._id}`}>Update</Link>
+                </MenuItem>
+              )}
+              {user._id === group.admin._id && (
+                <MenuItem onClick={() => onDelete(group._id)}>Delete</MenuItem>
               )}
               {/* {user._id !== group.admin._id && (
                 <MenuItem onClick={() => onLeave(group._id)}>Unenroll</MenuItem>

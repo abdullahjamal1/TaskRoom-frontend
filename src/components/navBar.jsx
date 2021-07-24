@@ -75,7 +75,7 @@ const NavBar = ({ user }) => {
             className={classes.title}
             onClick={() => history.push("/groups")}
           >
-            <i class="fa fa-thumb-tack" aria-hidden="true"></i> TaskRoom
+            <i className="fa fa-thumb-tack" aria-hidden="true"></i> TaskRoom
           </Typography>
           {isLogged && (
             <div>

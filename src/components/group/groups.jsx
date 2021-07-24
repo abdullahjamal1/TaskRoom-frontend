@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { paginate } from "../../utils/paginate";
-import _, { filter } from "lodash";
+import _ from "lodash";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -8,11 +8,9 @@ import {
   getGroups,
   leaveGroup,
 } from "../../services/groupService";
-import { getUser } from "../../services/userService";
 import Pagination from "../common/pagination";
 import SearchBox from "../common/searchBox";
 import GroupCard from "./GroupCard";
-import authService from "../../services/authService";
 import LoadingScreen from "../loadingScreen";
 
 import Container from "@material-ui/core/Container";
@@ -22,7 +20,7 @@ import AddIcon from "@material-ui/icons/Add";
 
 class Groups extends Component {
   state = {
-    groups: [],
+    groups: null,
     currentPage: 1,
     pageSize: 6,
     searchQuery: "",
@@ -37,6 +35,8 @@ class Groups extends Component {
     } = this.state;
 
     let filtered = allgroups;
+
+    if (!filtered) return { totalCount: 0, data: [] };
 
     if (searchQuery)
       filtered = allgroups.filter((g) =>
@@ -106,7 +106,6 @@ class Groups extends Component {
   };
 
   render() {
-    const { length: count } = this.state.groups;
     const { pageSize, currentPage, searchQuery, groups } = this.state;
     const { user } = this.props;
     const { totalCount, data } = this.getPageData();
@@ -147,6 +146,7 @@ class Groups extends Component {
           {data.length >= 0 &&
             data.map((group) => (
               <GroupCard
+                key={group._id}
                 group={group}
                 user={user}
                 onDelete={this.handleGroupDelete}
