@@ -9,6 +9,7 @@ import GroupView from './components/group/groupView';
 import GroupForm from "./components/group/groupForm";
 import GroupTabs from './components/group/groupTabs';
 
+import Home from './components/home';
 import LoginModal from "./components/auth/loginModal";
 import RegisterForm from './components/auth/registerForm';
 import Logout from './components/auth/logout';
@@ -56,8 +57,9 @@ class App extends Component {
         <ToastContainer />
         <LoginModal />
         <NavBar user={user} />
-        <main className="container">
+        <main>
           <Switch>
+            <Route path="/home" component={Home} />
             <Route path="/register" component={RegisterForm} />
             {/* <Route path="/login" component={LoginForm} /> */}
             <Route path="/logout" component={Logout} />
@@ -79,11 +81,10 @@ class App extends Component {
               render={props => <Groups {...props} user={this.state.user} />} />
             <Route path="/not-found" component={NotFound}></Route>
             <Redirect exact from='/service-worker.js' to='/service-worker.js' />
-            <Redirect exact from="/" to="/groups" />
+            <Redirect exact from="/" to="/home" />
             <Redirect to="/not-found" />
           </Switch>
         </main>
-        <Footer />
       </LoginContext.Provider>
 
 );

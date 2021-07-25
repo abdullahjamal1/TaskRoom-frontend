@@ -15,6 +15,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ArchiveIcon from "@material-ui/icons/Archive";
 import { useHistory } from "react-router-dom";
+import HomeIcon from "@material-ui/icons/Home";
 
 const useStyles = makeStyles({
   list: {
@@ -54,6 +55,12 @@ export default function CustomDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
+        {["Home"].map((text, index) => (
+          <ListItem button key={text} onClick={() => history.push("/home")}>
+            <ListItemIcon>{index === 0 && <HomeIcon />}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
         {["Projects"].map((text, index) => (
           <ListItem button key={text} onClick={() => history.push("/groups")}>
             <ListItemIcon>{index === 0 && <MenuIcon />}</ListItemIcon>

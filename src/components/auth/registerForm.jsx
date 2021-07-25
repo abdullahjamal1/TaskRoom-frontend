@@ -3,8 +3,8 @@ import Form from "../common/form";
 import Joi from "joi-browser";
 import * as userService from "../../services/userService";
 import Alert from "react-bootstrap/Alert";
-import { Button } from "react-bootstrap/Button";
 import Oauth from "../common/oauth";
+import { Grid, Container } from "@material-ui/core";
 
 class RegisterForm extends Form {
   state = {
@@ -51,27 +51,34 @@ class RegisterForm extends Form {
 
   render() {
     return (
-      <div className="row">
-        <div className="col"></div>
-        <form className="col" onSubmit={this.handleSubmit}>
-          <h2>Register</h2>
-          {this.renderInput("email", "Email")}
-          {this.renderInput("name", "Name")}
+      <Container>
+        <Grid
+          container
+          direction="row-reverse"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Grid item xs={12} sm={8} md={4}>
+            <form onSubmit={this.handleSubmit}>
+              <h2>Register</h2>
+              {this.renderInput("email", "Email")}
+              {this.renderInput("name", "Name")}
 
-          {this.state.nameFeedback.message && (
-            <div className={this.renderFeedbackClass()}>
-              this.state.nameFeedback.message
-            </div>
-          )}
+              {this.state.nameFeedback.message && (
+                <div className={this.renderFeedbackClass()}>
+                  this.state.nameFeedback.message
+                </div>
+              )}
 
-          {this.renderInput("password", "Password", "password")}
-          {this.renderResponse()}
+              {this.renderInput("password", "Password", "password")}
+              {this.renderResponse()}
 
-          <Oauth />
-          {this.renderButton("Register")}
-        </form>
-        <div className="col"></div>
-      </div>
+              <Oauth />
+              {this.renderButton("Register")}
+            </form>
+          </Grid>
+        </Grid>
+      </Container>
     );
   }
 }

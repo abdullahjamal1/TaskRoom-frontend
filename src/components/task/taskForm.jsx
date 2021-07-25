@@ -6,8 +6,12 @@ import { postTask, updateTask } from "../../services/taskService";
 
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Avatar from "@material-ui/core/Avatar";
+import ImageIcon from "@material-ui/icons/Image";
 import CloseIcon from "@material-ui/icons/Close";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
@@ -291,7 +295,7 @@ function CheckboxListSecondary({
             <ListItemSecondaryAction>
               <Checkbox
                 edge="end"
-                onChange={handleToggle(member.email)}
+                onChange={() => handleToggle(member.email)}
                 checked={checked.indexOf(member.email) !== -1}
                 inputProps={{ "aria-labelledby": labelId }}
               />

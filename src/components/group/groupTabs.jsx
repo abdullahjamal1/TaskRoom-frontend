@@ -10,6 +10,7 @@ import { getGroup } from "../../services/groupService";
 import LoadingScreen from "../loadingScreen";
 import FileView from "../file/fileView";
 import MembersContext from "../../contexts/membersContext";
+import { Container } from "@material-ui/core";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -139,30 +140,35 @@ export default function CustomizedTabs(props) {
   }
 
   return (
-    <div className={classes.root}>
-      <h5>{group.title}</h5>
-      <div className={classes.demo1}>
-        <AntTabs value={value} onChange={handleChange} aria-label="ant example">
-          <AntTab label="Project" value="one" />
-          <AntTab label="Workflows" value="two" />
-          <AntTab label="Files" value="three" />
-        </AntTabs>
-        <TabPanel value={value} index="one">
-          <GroupView props={props} group={group} />
-        </TabPanel>
-        <TabPanel value={value} index="two">
-          <MembersContext.Provider
-            value={group.members.filter((member) => member.isVerified)}
+    <Container>
+      <div className={classes.root}>
+        <h5>{group.title}</h5>
+        <div className={classes.demo1}>
+          <AntTabs
+            value={value}
+            onChange={handleChange}
+            aria-label="ant example"
           >
-            <WorkFlow props={props} />
-          </MembersContext.Provider>
-        </TabPanel>
-        <TabPanel value={value} index="three">
-          <FileView props={props} />
-        </TabPanel>
-        <Typography className={classes.padding} />
-      </div>
-      {/* <div className={classes.demo2}>
+            <AntTab label="Project" value="one" />
+            <AntTab label="Workflows" value="two" />
+            <AntTab label="Files" value="three" />
+          </AntTabs>
+          <TabPanel value={value} index="one">
+            <GroupView props={props} group={group} />
+          </TabPanel>
+          <TabPanel value={value} index="two">
+            <MembersContext.Provider
+              value={group.members.filter((member) => member.isVerified)}
+            >
+              <WorkFlow props={props} />
+            </MembersContext.Provider>
+          </TabPanel>
+          <TabPanel value={value} index="three">
+            <FileView props={props} />
+          </TabPanel>
+          <Typography className={classes.padding} />
+        </div>
+        {/* <div className={classes.demo2}>
         <StyledTabs
           value={value}
           onChange={handleChange}
@@ -183,6 +189,7 @@ export default function CustomizedTabs(props) {
         </TabPanel>
         <Typography className={classes.padding} />
       </div> */}
-    </div>
+      </div>
+    </Container>
   );
 }

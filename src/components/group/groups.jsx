@@ -142,7 +142,7 @@ class Groups extends Component {
             </small>
           </Grid>
         </Grid>
-        <Grid container direction="row" spacing={2}>
+        <Grid container direction="row" spacing={1}>
           {data.length >= 0 &&
             data.map((group) => (
               <GroupCard

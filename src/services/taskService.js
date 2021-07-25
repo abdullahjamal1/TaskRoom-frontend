@@ -20,8 +20,8 @@ export function postTask(groupId, task) {
     return http.post(apiEndPoint, task, { params: { groupId } });
 }
 
-export function deleteTask(id) {
-    return http.delete(taskUrl(id));
+export function deleteTask(taskId, groupId) {
+    return http.delete(taskUrl(taskId), { params: { groupId } });
 }
 
 export function updateTask(taskId, groupId, task) {

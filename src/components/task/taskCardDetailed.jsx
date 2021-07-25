@@ -29,6 +29,7 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import moment from "moment";
 import SaveIcon from "@material-ui/icons/Save";
 import MembersContext from "../../contexts/membersContext";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -131,9 +132,11 @@ export default function TaskCardDetailed({
               <Grid item container direction="row" spacing={1}>
                 {task.collaborators.map((c) => (
                   <Grid item style={{ marginRight: 5 }}>
-                    <Avatar src={c.avatar_url} className={classes.avatar}>
-                      {c.name[0]}
-                    </Avatar>
+                    <Tooltip title={c.name} arrow>
+                      <Avatar src={c.avatar_url} className={classes.avatar}>
+                        {c.name[0]}
+                      </Avatar>
+                    </Tooltip>
                   </Grid>
                 ))}
                 <hr />
@@ -193,7 +196,9 @@ export default function TaskCardDetailed({
                   )}
                 </>
               ))}
-              <MenuItem onClick={() => onDelete(task._id)}>Delete</MenuItem>
+              <MenuItem onClick={() => onDelete(task._id, task.groupId)}>
+                Delete
+              </MenuItem>
             </Menu>
           </CardActions>
         </CardContent>

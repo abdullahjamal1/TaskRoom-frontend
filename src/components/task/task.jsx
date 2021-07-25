@@ -2,7 +2,13 @@ import React, { useEffect, useState, useRef} from "react";
 import { Grid } from "@material-ui/core";
 import { Container, Button, Paper, Link } from "@material-ui/core";
 import { Timeline } from "@material-ui/lab";
-import { getTask, updateTask, uploadFile, deleteFile } from "../../services/taskService";
+import {
+  getTask,
+  updateTask,
+  deleteTask,
+  uploadFile,
+  deleteFile,
+} from "../../services/taskService";
 import CustomizedTimeline from "./timeline";
 import TaskCardDetailed from "./taskCardDetailed";
 import LoadingScreen from "../loadingScreen";
@@ -30,8 +36,11 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { MenuItem } from "@material-ui/core";
 import Menu from "@material-ui/core/Menu";
 import Input from "@material-ui/core/Input";
+import { useHistory } from "react-router-dom";
 
 export default function Task(props) {
+  const history = useHistory();
+
   const { groupId, taskId } = props.match.params;
 
   const [task, setTask] = useState(null);
@@ -47,6 +56,15 @@ export default function Task(props) {
 
   const handlePost = (newTask) => {
     setTask(newTask);
+  };
+
+  const handleDelete = async (taskId, groupId) => {
+    try {
+      await deleteTask(taskId, groupId);
+      history.replace(`/groups/${groupId}`);
+    } catch (ex) {
+      console.log(ex);
+    }
   };
 
   const handleStatusChange = async (action) => {
@@ -93,6 +111,7 @@ export default function Task(props) {
               task={task}
               onStatusChange={handleStatusChange}
               onPost={handlePost}
+              onDelete={handleDelete}
             />
           </Grid>
           <Grid item>

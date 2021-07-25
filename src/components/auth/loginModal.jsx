@@ -62,6 +62,10 @@ class LoginModal extends Form {
                 <Link onClick={context.onHandleClose} to="/reset-password">
                   Forgot Password ?
                 </Link>
+                <br />
+                <Link onClick={context.onHandleClose} to="/register">
+                  Not registered? Register here
+                </Link>
                 {/* <Link onClick={context.onHandleClose} to="/register">
                   Not registered ? Register here.
                 </Link> */}

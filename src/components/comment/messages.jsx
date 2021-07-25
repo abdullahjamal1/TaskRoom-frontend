@@ -40,7 +40,7 @@ export default function Messages({ messages, user }) {
           alignItems="baseline"
         >
           <Grid item>
-            <Avatar className={classes.avatar}>
+            <Avatar className={classes.avatar} src={message.author.avatar_url}>
               {message.author.name.substr(0, 1)}
             </Avatar>
           </Grid>

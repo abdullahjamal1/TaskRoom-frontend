@@ -27,7 +27,9 @@ export default function MessageForm({ onPost, user }) {
   return (
     <Grid item container direction="row" justify="center" alignItems="center">
       <Grid item xs={2} sm={1}>
-        <Avatar src={user.avatar_url} className={classes.avatar} />
+        <Avatar src={user.avatar_url} className={classes.avatar}>
+          {user.name[0]}
+        </Avatar>
       </Grid>
       <Grid item xs={8}>
         <TextField
