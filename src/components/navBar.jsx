@@ -73,7 +73,7 @@ const NavBar = ({ user }) => {
           <Typography
             variant="h6"
             className={classes.title}
-            onClick={() => history.push("/groups")}
+            onClick={() => history.push("/home")}
           >
             <i className="fa fa-thumb-tack" aria-hidden="true"></i> TaskRoom
           </Typography>

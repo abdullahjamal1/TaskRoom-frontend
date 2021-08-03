@@ -63,12 +63,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const cards = [
-  { title: "Kanban Board", image: "/workflow.PNG" },
-  { title: "Collaboration", image: "/collaborator.PNG" },
-  { title: "Discussion", image: "/discussion.PNG" },
-  { title: "Files", image: "/files.PNG" },
-  { title: "Timeline", image: "/timeline.PNG" },
-  { title: "Notifications", image: "/notification.PNG" },
+  {
+    title: "Kanban Board",
+    image: "/workflow.PNG",
+    description:
+      "Supports Kanban board to smoothly handle agile worklows.",
+  },
+  {
+    title: "Collaboration",
+    image: "/collaborator.PNG",
+    description: "Allows team to collaborate over multiple projects with ease.",
+  },
+  {
+    title: "Discussion",
+    image: "/discussion.PNG",
+    description: "Provides separate discussion channels for every task.",
+  },
+  {
+    title: "Files",
+    image: "/files.PNG",
+    description:
+      "Provides a space for teams to store and manage files directly.",
+  },
+  {
+    title: "Timeline",
+    image: "/timeline.PNG",
+    description: "Displays timeline of a task with actions and updates.",
+  },
+  {
+    title: "Notifications",
+    image: "/notification.PNG",
+    description: "Supports notifications for tasks and actions.",
+  },
 ];
 
 export default function Home() {
@@ -97,8 +123,8 @@ export default function Home() {
               color="textSecondary"
               paragraph
             >
-              A project management portal with support for agile workflows,
-              collaborations, discussions and much more.
+              A project management tool for teams to connect, discuss and
+              collaborate over multiple projects simultaneously.
             </Typography>
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justifyContent="center">
@@ -141,10 +167,7 @@ export default function Home() {
                     <Typography gutterBottom variant="h5" component="h2">
                       {card.title}
                     </Typography>
-                    {/* <Typography>
-                      This is a media card. You can use this section to describe
-                      the content.
-                    </Typography> */}
+                    <Typography>{card.description}</Typography>
                   </CardContent>
                   {/* <CardActions>
                     <Button size="small" color="primary">
